@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Barcodes extends Model
 {
     use HasFactory;
-
+//tes
     protected $guarded = [];
 
     public function users()
