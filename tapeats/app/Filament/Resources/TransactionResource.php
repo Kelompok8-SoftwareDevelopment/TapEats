@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -65,6 +66,13 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('No')->state( //membuat index
+                    static function (HasTable $livewire, $rowLoop): string {
+                        return (string) (
+                            $rowLoop->iteration + ($livewire->getTableRecordsPerPage() * ($livewire->getTablePage() - 1))
+                        );
+                    }
+                )->label('No.')->alignCenter(),
                 Tables\Columns\TextColumn::make('code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')

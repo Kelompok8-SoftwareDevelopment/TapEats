@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\Attributes\Reactive;
@@ -26,7 +27,7 @@ class FoodsResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('description')
+                Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
@@ -90,12 +91,14 @@ class FoodsResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                    ->sortable()
+                    ->limit(20)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('price')
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price_afterdiscount')
+                Tables\Columns\TextColumn::make('price after discount')
                     ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('percent')
