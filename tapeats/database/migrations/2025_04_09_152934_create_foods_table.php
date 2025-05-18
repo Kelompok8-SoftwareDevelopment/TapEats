@@ -17,13 +17,12 @@ return new class extends Migration
             $table->string('description');
             $table->string('image');
             $table->string('price');
-            $table->string('price_afterdiscount')->nullable();;#nullable(kolomnya boleh kosong)
+            $table->string('price_afterdiscount')->nullable();; #nullable(kolomnya boleh kosong)
             $table->string('percent')->nullable();;
             $table->string('is_promo')->nullable();;
-            $table->string('categories_id')->constrained('categories')->cascadeOnDelete();#Refer ke tabel categories
+            $table->string('categories_id')->constrained('categories')->cascadeOnDelete(); #Refer ke tabel categories
             $table->timestamps();
         });
-        
     }
 
     /**
