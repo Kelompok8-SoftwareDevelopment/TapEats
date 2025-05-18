@@ -95,10 +95,12 @@ class FoodsResource extends Resource
                     ->limit(20)
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\ImageColumn::make('image'),
+
                 Tables\Columns\TextColumn::make('price')
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('price after discount')
+                Tables\Columns\TextColumn::make('price_afterdiscount')
+                    ->label('Price After Discount')
                     ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('percent')
