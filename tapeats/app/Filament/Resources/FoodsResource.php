@@ -106,7 +106,9 @@ class FoodsResource extends Resource
                 Tables\Columns\TextColumn::make('percent')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('is_promo')
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No'),
+
                 Tables\Columns\TextColumn::make('categories.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
