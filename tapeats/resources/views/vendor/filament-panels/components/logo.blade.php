@@ -1,1 +1,0 @@
-<img src="{{ asset('/images/logo_tapeats.png') }}" alt="logo" class="h-8 w-auto">
