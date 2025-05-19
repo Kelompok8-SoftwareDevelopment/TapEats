@@ -27,9 +27,9 @@ trait CartManagement
             $price = $item['is_promo'] ? $item['price_afterdiscount'] : $item['price'];
             return $price * $item['quantity'];
         }, $this->cartItems));
-    
+
         $this->tax = $this->subtotal * 0.11;
-    
+
         $this->total = $this->subtotal + $this->tax;
     }
 }

@@ -50,9 +50,9 @@ class CartPage extends Component
     public function deleteSelected()
     {
         $this->cartItems = collect($this->cartItems)->filter(fn($item) => !$item['selected'])->toArray();
-    
+
         $selectedIds = collect($this->selectedItems)->map(fn($item) => $item['id'])->toArray();
-    
+
         $cartItemIds = collect(session('cart_items', []))
             ->map(fn($item) => $item['id'])
             ->toArray();
@@ -72,7 +72,7 @@ class CartPage extends Component
         }
 
         session(['cart_items' => $this->cartItems]);
-    
+
         return $this->redirect('/checkout', navigate: true);
     }
 

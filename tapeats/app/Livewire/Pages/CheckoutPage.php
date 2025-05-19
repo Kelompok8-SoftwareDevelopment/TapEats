@@ -41,7 +41,7 @@ class CheckoutPage extends Component
         if (empty($this->cartItems)) {
             return redirect()->route('product.cart');
         }
-    
+
         $this->paymentToken = Str::random(32);
         session(['payment_token' => $this->paymentToken]);
 

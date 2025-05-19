@@ -12,7 +12,7 @@ class PaymentSuccessPage extends Component
         session()->forget(['external_id', 'has_unpaid_transaction', 'cart_items', 'payment_token']);
         session()->save();
     }
-    
+
     #[Layout('components.layouts.app')]
     public function render()
     {
