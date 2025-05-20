@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<script src="{{ asset('js/app.js') }}"></script>
+
 <div
     x-data="{ open: false }"
     class="flex min-h-screen flex-col bg-white font-poppins"

@@ -26,7 +26,7 @@ Route::middleware(CheckTableNumber::class)->group(function () {
     Route::get('/food/promo', PromoPage::class)->name('product.promo');
     Route::get('/food/{id}', DetailPage::class)->name('product.detail');
 
-    Route::get('/cart', CartPage::class)->name('product.cart');
+    Route::get('/cart', CartPage::class)->name('payment.cart');
     Route::get('/checkout', CheckoutPage::class)->name('payment.checkout');
 
     Route::middleware('throttle:10,1')->post('/payment', [TransactionController::class, 'handlePayment'])->name('payment');
