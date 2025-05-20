@@ -10,9 +10,9 @@
                     <img
                         src="{{ asset("assets/images/logo.png") }}"
                         class="scale-[0.9]"
-                        alt="MyFOOD logo" />
+                        alt="Logo" />
                     <span class="text-lg font-semibold text-primary-50">
-                        MyFOOD
+                        TapEats
                     </span>
                 </div>
                 <div
