@@ -9,8 +9,8 @@
             <div class="rounded-3xl bg-white px-5 py-2">
                 <div class="flex items-center gap-1.5">
                     <img
-                        src="{{ asset("assets/images/logo.png") }}"
-                        class="scale-[0.9]"
+                        src="{{ asset("assets/images/logo-tapeats.png") }}"
+                        class="w-12 h-12 object-contain"
                         alt="MyFOOD logo"
                     />
                     <span class="text-lg font-semibold text-black">

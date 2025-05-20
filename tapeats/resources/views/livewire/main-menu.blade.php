@@ -1,5 +1,7 @@
 <nav
     class="fixed bottom-0 z-20 w-full max-w-md rounded-t-3xl bg-white p-4 font-poppins"
+    style="box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);"
+
 >
     <div class="flex items-center justify-around">
         <a class="flex flex-col items-center" href="/" wire:navigate>
