@@ -43,4 +43,3 @@ Route::middleware(CheckTableNumber::class)->group(function () {
 
 // Webhook (jangan pakai middleware juga)
 Route::post('/payment/webhook', [TransactionController::class, 'handleWebhook'])->name('payment.webhook');
-
