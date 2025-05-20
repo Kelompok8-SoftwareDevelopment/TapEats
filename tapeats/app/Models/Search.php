@@ -4,30 +4,39 @@ namespace App\Models;
 
 trait Search
 {
-    private function buildWildCards($term) {
-        if ($term == "") {
-            return $term;
-        }
-
+    private function buildTsQuery($term)
+    {
+        // Hilangkan karakter khusus yang nggak perlu
         $reservedSymbols = ['-', '+', '<', '>', '@', '(', ')', '~'];
-        $term = str_replace($reservedSymbols, '', $term);
+        $term = str_replace($reservedSymbols, ' ', $term);
 
-        $words = explode(' ', $term);
-        foreach($words as $idx => $word) {
-            $words[$idx] = "+" . $word . "*";
-        }
-        $term = implode(' ', $words);
-        return $term;
+        // Pecah jadi kata, lalu gabungkan dengan operator & (AND)
+        $words = array_filter(explode(' ', $term));
+        $queryParts = array_map(function ($word) {
+            return $word . ':*'; // menggunakan prefix matching
+        }, $words);
+
+        return implode(' & ', $queryParts);
     }
 
-    protected function scopeSearch($query, $term) {
-        $columns = implode(',', $this->searchable);
+    protected function scopeSearch($query, $term)
+    {
+        if (empty($term)) {
+            return $query;
+        }
 
-        $query->whereRaw(
-            "MATCH ({$columns}) AGAINST (? IN BOOLEAN MODE)",
-            $this->buildWildCards($term)
-        );
+        $columns = $this->searchable;
 
-        return $query;
+        // Buat expression to_tsvector untuk gabungan kolom
+        // Contoh: to_tsvector('english', coalesce(col1, '') || ' ' || coalesce(col2, '') ...)
+        $tsVectorParts = array_map(function ($col) {
+            return "coalesce({$col}, '')";
+        }, $columns);
+
+        $tsVector = "to_tsvector('english', " . implode(" || ' ' || ", $tsVectorParts) . ")";
+
+        $tsQuery = $this->buildTsQuery($term);
+
+        return $query->whereRaw("{$tsVector} @@ to_tsquery('english', ?)", [$tsQuery]);
     }
 }

@@ -11,17 +11,10 @@ class FoodCard extends Component
     public $data;
     public bool $isGrid = true;
 
-   public function mount($data, $categories)
-{
-    $this->data = $data;
-    $this->categories = $categories;
-
-    $this->matchedCategory = collect($this->categories)
-        ->firstWhere('id', $this->data->categories_id); // akses pakai ->
-}
-
-    
-
+    public function mount()
+    {
+        $this->matchedCategory = collect($this->categories)->firstWhere('id', $this->data->categories_id);
+    }
 
     public function showDetails()
     {
