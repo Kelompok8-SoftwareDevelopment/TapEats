@@ -1,12 +1,9 @@
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
-
 <div
     x-data="{ open: false }"
     class="flex min-h-screen flex-col bg-white font-poppins"
 >
     <livewire:components.page-title-nav
-        :title="'Keranjang'"
+        :title="'Cart'"
         wire:key="{{ str()->random(50) }}"
         :hasBack="true"
         :hasFilter="false"
@@ -28,14 +25,14 @@
                     x-on:click="open = true"
                     class="flex items-center gap-2 rounded-full bg-primary-10 px-6 py-3 font-semibold text-primary-50"
                 >
-                    Hapus ({{ count($selectedItems) }})
+                    Delete ({{ count($selectedItems) }})
                 </button>
                 <button
                     x-bind:disabled="! {{ count($selectedItems) }} > 0"
                     wire:click="checkout"
                     class="flex items-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10 disabled:bg-primary-30"
                 >
-                    <span>Pesan Sekarang</span>
+                    <span>Order Now</span>
                     <img
                         src="{{ asset("assets/icons/arrow-right-white-icon.svg") }}"
                         alt="Cart"
@@ -46,15 +43,15 @@
             <div>
                 <img
                     src="{{ asset("assets/images/bg-cart-empty.png") }}"
-                    alt="Tidak ada data"
+                    alt="No data"
                     class="w-full overflow-hidden rounded-3xl"
                 />
                 <div class="mt-4 w-full text-center">
                     <p class="text-lg font-semibold text-black-80">
-                        Tidak Ada Data
+                        No Data
                     </p>
                     <p class="text-sm font-medium text-black-30">
-                        Silakan masukkan makanan kamu disini
+                        Please Add Your Order Here
                     </p>
                 </div>
             </div>

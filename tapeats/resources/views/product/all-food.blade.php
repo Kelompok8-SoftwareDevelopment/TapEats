@@ -1,7 +1,4 @@
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
-
-<div x-data="{ open: false }">
+<div x-data="{ open: false }" class="bg-white min-h-screen font-poppins">
     <livewire:components.page-title-nav
         :title="'All Foods'"
         wire:key="{{ str()->random(50) }}"

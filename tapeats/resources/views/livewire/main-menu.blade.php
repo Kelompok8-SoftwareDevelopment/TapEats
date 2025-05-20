@@ -8,7 +8,12 @@
                 alt="Home"
             />
             <span
-                class="{{ request()->routeIs("home") ? "text-primary-50" : "text-black-100" }} mt-1 text-sm"
+                @if (request()->routeIs("home"))
+                    style="color: #2A4F00;"
+                @else
+                    class="text-black-100"
+                @endif
+                class="mt-1 text-sm"
             >
                 Home
             </span>
@@ -19,7 +24,12 @@
                 alt="Cart"
             />
             <span
-                class="{{ request()->routeIs("payment.cart") ? "text-primary-50" : "text-black-100" }} mt-1 text-sm"
+                @if (request()->routeIs("home"))
+                    style="color: #2A4F00;"
+                @else
+                    class="text-black-100"
+                @endif
+                class="mt-1 text-sm"
             >
                 Cart
             </span>
@@ -30,7 +40,12 @@
                 alt="Promo"
             />
             <span
-                class="{{ request()->routeIs("product.promo") ? "text-primary-50" : "text-black-100" }} mt-1 text-sm"
+                @if (request()->routeIs("home"))
+                    style="color: #2A4F00;"
+                @else
+                    class="text-black-100"
+                @endif
+                class="mt-1 text-sm"
             >
                 Promo
             </span>
@@ -41,7 +56,12 @@
                 alt="All Food"
             />
             <span
-                class="{{ request()->routeIs("product.index") ? "text-primary-50" : "text-black-100" }} mt-1 text-sm"
+                @if (request()->routeIs("home"))
+                    style="color: #2A4F00;"
+                @else
+                    class="text-black-100"
+                @endif
+                class="mt-1 text-sm"
             >
                 All Food
             </span>

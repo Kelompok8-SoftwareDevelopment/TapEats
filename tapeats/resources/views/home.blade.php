@@ -1,10 +1,7 @@
-<link rel="stylesheet" href="{{ asset('css/app.css') }}">
-<script src="{{ asset('js/app.js') }}"></script>
-
-<div>
+<div class="bg-white">
     <header
         style="
-            background-image: url('{{ asset("assets/images/bg-hero.svg") }}');
+            background-image: url('{{ asset("assets/images/ollies1.jpg") }}');
         "
         class="rounded-b-3xl bg-cover font-poppins"
     >
@@ -16,17 +13,17 @@
                         class="scale-[0.9]"
                         alt="MyFOOD logo"
                     />
-                    <span class="text-lg font-semibold text-primary-50">
-                        MyFOOD
+                    <span class="text-lg font-semibold text-black">
+                        TapEats
                     </span>
                 </div>
                 <div
                     style="
-                        background-image: url('{{ asset("assets/images/bg-swiggly-line.svg") }}');
+                        background-image: url('{{ asset("assets/images/ollies3.jpg") }}');
                     "
                     class="rounded-2xl bg-primary-50 px-5 py-3.5 text-center text-white"
                 >
-                    <span class="tex-sm block font-semibold">Kamu di meja</span>
+                    <span class="tex-sm block font-semibold">Table Number</span>
                     <a
                         href="/"
                         class="mt-1.5 block cursor-pointer text-3xl font-bold"
@@ -37,15 +34,15 @@
             </div>
             <div class="mt-5">
                 <h2
-                    class="mb-3 text-center text-xl font-semibold text-black-100"
+                    class="mb-3 text-center text-xl font-semibold text-white"
                 >
-                    Mau Pesan Apa hari ini?
+                    What do You Want to Eat?
                 </h2>
                 <form class="flex overflow-hidden rounded-full" method="GET">
                     <input
                         type="search"
                         class="h-12 w-full appearance-none rounded-full px-4 placeholder:font-semibold placeholder:text-black-30"
-                        placeholder="Cari Makanan"
+                        placeholder="Search"
                         wire:model.live.debounce.300ms="term"
                     />
                     @if (! $term)
@@ -81,7 +78,7 @@
                     <a
                         href="/food/promo"
                         wire:navigate
-                        class="block font-semibold text-primary-50"
+                        class="block font-semibold text-[#2D5900]"
                     >
                         See More
                     </a>
@@ -111,11 +108,11 @@
             <div class="container">
                 <div
                     style="
-                        background-image: url('{{ asset("assets/images/bg-container.png") }}');
+                        background-image: url('{{ asset("assets/images/ollies2.jpg") }}');
                     "
                     class="space-y-6 rounded-2xl bg-cover p-6 text-center text-white"
                 >
-                    <h3 class="text-left text-2xl font-semibold text-black-100">
+                    <h3 class="text-left text-2xl font-semibold text-white">
                         Cita Rasa Lokal
                         <br />
                         Harga Super Lokal!
@@ -123,9 +120,9 @@
                     <a
                         href="/food"
                         wire:navigate
-                        class="block w-fit rounded-full bg-primary-50 px-6 py-2 font-semibold text-white"
+                        class="block w-fit rounded-full bg-[#2D5900] px-6 py-2 font-semibold text-white"
                     >
-                        Lihat Semua Menu
+                        All Menu
                     </a>
                 </div>
             </div>
@@ -133,12 +130,12 @@
             <div class="mt-4">
                 <div class="container flex items-center justify-between">
                     <h3 class="text-xl font-semibold text-black-100">
-                        Favorite Food
+                        Everyone's Favorite
                     </h3>
                     <a
                         href="/food/favorite"
                         wire:navigate
-                        class="block font-semibold text-primary-50"
+                        class="block font-semibold text-[#2D5900]"
                     >
                         See More
                     </a>

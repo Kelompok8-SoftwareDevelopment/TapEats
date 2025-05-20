@@ -19,7 +19,6 @@ trait CategoryFilterTrait
                 return in_array($item->categories_id, $this->selectedCategories);
             });
         }
-
         return $this->items;
     }
 }
