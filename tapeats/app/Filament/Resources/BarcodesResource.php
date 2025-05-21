@@ -26,7 +26,7 @@ class BarcodesResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('table_number')
                     ->required()
-                    ->default(fn() => strtoupper(chr(rand(65,90)) . rand(1000, 9999))),
+                    ->default(fn() => strtoupper(chr(rand(65, 90)) . rand(1000, 9999))),
                 Forms\Components\FileUpload::make('image')
                     ->image()
                     ->required()
@@ -46,7 +46,7 @@ class BarcodesResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('table_number')
                     ->searchable(),
-                // Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('qr_value')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('users.name')
@@ -65,16 +65,16 @@ class BarcodesResource extends Resource
             ])
             ->actions([
                 Tables\Actions\Action::make('download')
-                ->label('Download QR Code')
-                ->icon('heroicon-o-arrow-down-tray')
-                ->action(function ($record) {
-                    $filePath = storage_path('app/public/' . $record->image);
-                    if (file_exists($filePath)) {
-                        return response()->download($filePath);
-                    }
-                    
-                    session()->flash('error', 'QR code image not found.');
-                }),
+                    ->label('Download QR Code')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function ($record) {
+                        $filePath = storage_path('app/public/' . $record->image);
+                        if (file_exists($filePath)) {
+                            return response()->download($filePath);
+                        }
+
+                        session()->flash('error', 'QR code image not found.');
+                    }),
 
             ])
             ->bulkActions([
