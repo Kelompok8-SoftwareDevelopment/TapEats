@@ -19,9 +19,10 @@ class CreateQr extends Page
 
     public $table_number;
 
-    public function mount():void{
+    public function mount(): void
+    {
         $this->form->fill();
-        $this->table_number = strtoupper(chr(rand(65,90)) . rand (1000, 9999));
+        $this->table_number = strtoupper(chr(rand(65, 90)) . rand(1000, 9999));
     }
 
     public function form(Form $form): Form
@@ -29,9 +30,9 @@ class CreateQr extends Page
         return $form
             ->schema([
                 Forms\Components\TextInput::make('table_number')
-                ->required()
-                ->default(fn() => $this->table_number)
-                ->disabled(),
+                    ->required()
+                    ->default(fn() => $this->table_number)
+                    ->disabled(),
             ]);
     }
 
@@ -53,15 +54,15 @@ class CreateQr extends Page
             'table_number' => $this->table_number,
             'users_id' => Auth::user()->id,
             'image' => $svgFilePath,
-            'qr_value' => $host 
+            'qr_value' => $host
         ]);
 
         // Notifikasi 
         Notification::make()
-        ->title('QR Code Created')
-        ->success()
-        ->icon('heroicon-o-check-circle')
-        ->send();
+            ->title('QR Code Created')
+            ->success()
+            ->icon('heroicon-o-check-circle')
+            ->send();
 
         //Redirect ke barcode list
         $this->redirect(url('admin/barcodes'));
