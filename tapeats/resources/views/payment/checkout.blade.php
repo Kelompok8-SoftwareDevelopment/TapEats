@@ -3,7 +3,7 @@
     class="flex min-h-screen flex-col bg-white font-poppins"
 >
     <livewire:components.page-title-nav
-        :title="'Pemesanan'"
+        :title="'Checkout'"
         wire:key="{{ str()->random(50) }}"
         :hasBack="true"
         :hasFilter="false"
@@ -14,13 +14,13 @@
             <div
                 class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3"
             >
-                <span>Kamu di meja</span>
+                <span>Your Table Number</span>
                 <span class="text-lg font-semibold">{{ $tableNumber }}</span>
             </div>
             <div
                 class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3"
             >
-                <span>Nama Pemesan</span>
+                <span>Name</span>
                 <span class="flex items-center gap-2 text-lg font-semibold">
                     {{ $name ?? "" }}
                     <button
@@ -78,18 +78,20 @@
             >
                 @csrf
                 <button
-                    @if (empty($name) || empty($phone)) disabled @endif
                     type="submit"
+                    @if (empty($name) || empty($phone)) disabled @endif
                     name="action"
-                    value="pay"
-                    class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
+                    value="continue"
+                    class="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
+                    style="background-color: #2D5900;"
                 >
-                    <span>Bayar Sekarang</span>
+                    <span>Payment</span>
                     <img
-                        src="{{ asset("assets/icons/arrow-right-white-icon.svg") }}"
+                        src="{{ asset('assets/icons/arrow-right-white-icon.svg') }}"
                         alt="Cart"
                     />
                 </button>
+
             </form>
         @else
             <form
