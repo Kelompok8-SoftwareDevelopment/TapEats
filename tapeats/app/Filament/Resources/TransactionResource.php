@@ -92,9 +92,8 @@ class TransactionResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Phone Number')
-                    ->searchable(),
-                Tables\Columns\ImageColumn::make('barcodes.image')
-                    ->label('Barcode'),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->label('Payment Method')
                     ->searchable(),
@@ -119,12 +118,7 @@ class TransactionResource extends Resource
                     ->numeric()
                     ->money('IDR'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Updated At')
+                    ->label('Transaction Time')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
