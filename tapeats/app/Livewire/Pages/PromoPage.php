@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Pages;
 
-use App\Livewire\Traits\CategoryFilterTrait;
 use App\Models\Category;
 use App\Models\Foods;
 use Livewire\Attributes\Layout;
@@ -10,17 +9,19 @@ use Livewire\Component;
 
 class PromoPage extends Component
 {
-    use CategoryFilterTrait;
-
     public $categories;
-    public $selectedCategories = [];
     public $items;
-    public $title = "Promo";
+    public $selectedCategory = null;
 
     public function mount(Foods $foods)
     {
         $this->categories = Category::all();
-        $this->items = $foods->getPromo();
+        $this->items = $foods->getPromo(); // hanya data promo
+    }
+
+    public function selectCategory($categoryId = null)
+    {
+        $this->selectedCategory = $categoryId;
     }
 
     #[Layout('components.layouts.page')]
@@ -30,6 +31,19 @@ class PromoPage extends Component
 
         return view('product.promo', [
             'filteredProducts' => $filteredProducts,
+            'categories' => $this->categories,
+            'selectedCategory' => $this->selectedCategory,
         ]);
+    }
+
+    public function getFilteredItems()
+    {
+        if ($this->selectedCategory) {
+            return $this->items->filter(function ($item) {
+                return $item->categories_id == $this->selectedCategory;
+            });
+        }
+
+        return $this->items;
     }
 }

@@ -1,6 +1,7 @@
-<div class="container flex items-center justify-between p-4 font-poppins">
+<div class="relative flex items-center justify-center p-4 font-poppins">
+    {{-- Back Button --}}
     <div
-        class="{{ $hasBack ? 'block' : 'invisible' }} grid aspect-square cursor-pointer place-content-center rounded-full p-3 transition-all"
+        class="{{ $hasBack ? 'block' : 'invisible' }} absolute left-4 grid aspect-square cursor-pointer place-content-center rounded-full p-3 transition-all"
         style="background-color: #b7e4c7;"
         x-data
         x-on:click="window.history.back()"
@@ -10,15 +11,6 @@
         <img src="{{ asset('assets/icons/arrow-left-icon.svg') }}" alt="Back" />
     </div>
 
-    <h2 class="text-xl font-semibold text-black-100">{{ $title }}</h2>
-
-    <div
-        class="{{ $hasFilter ? 'block' : 'invisible' }} grid aspect-square cursor-pointer place-content-center rounded-full p-3 transition-all"
-        style="background-color: #b7e4c7;"
-        x-on:click="open = !open"
-        onmouseover="this.style.backgroundColor='#a4d6b1'"
-        onmouseout="this.style.backgroundColor='#b7e4c7'"
-    >
-        <img src="{{ asset('assets/icons/filter-icon.svg') }}" alt="Search" />
-    </div>
+    {{-- Title --}}
+    <h2 class="text-xl font-semibold text-black-100 text-center w-full">{{ $title }}</h2>
 </div>

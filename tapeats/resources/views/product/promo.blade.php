@@ -1,10 +1,45 @@
-<div x-data="{ open: false }" class="bg-white min-h-screen font-poppins">
+<div class="bg-white min-h-screen font-poppins">
+    {{-- Page Title --}}
     <livewire:components.page-title-nav
         :title="'Today\'s Promo'"
         wire:key="{{ str()->random(50) }}"
-    ></livewire:components.page-title-nav>
+    />
 
-    <div class="container mb-24 grid grid-cols-2 items-center gap-4">
+    {{-- Filter Tabs --}}
+    <div class="container px-4 pt-2">
+        <div class="flex gap-2 overflow-x-auto pb-2">
+            {{-- "All" Button --}}
+            <button
+                wire:click="selectCategory"
+                class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0"
+                style="
+                    background-color: {{ is_null($selectedCategory) ? '#b7e4c7' : '#ffffff' }};
+                    color: {{ is_null($selectedCategory) ? '#2D5900' : '#000000' }};
+                    border-color: {{ is_null($selectedCategory) ? '#b7e4c7' : '#d1d5db' }};
+                "
+            >
+                All
+            </button>
+
+            {{-- Other Categories --}}
+            @foreach ($categories as $category)
+                <button
+                    wire:click="selectCategory({{ $category->id }})"
+                    class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0"
+                    style="
+                        background-color: {{ $selectedCategory === $category->id ? '#b7e4c7' : '#ffffff' }};
+                        color: {{ $selectedCategory === $category->id ? '#2D5900' : '#000000' }};
+                        border-color: {{ $selectedCategory === $category->id ? '#b7e4c7' : '#d1d5db' }};
+                    "
+                >
+                    {{ $category->name }}
+                </button>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Promo Food Cards --}}
+    <div class="container mt-4 mb-24 grid grid-cols-2 gap-4">
         @if (isset($filteredProducts) && count($filteredProducts) > 0)
             @foreach ($filteredProducts as $promo)
                 <livewire:components.food-card
@@ -18,13 +53,5 @@
                 <p class="text-center text-black-70">No promo available</p>
             </div>
         @endif
-    </div>
-
-    <div x-show="open">
-        <livewire:components.filter-modal
-            :selectedCategories="$selectedCategories"
-            :categories="$categories"
-            wire:key="{{ str()->random(50) }}"
-        />
     </div>
 </div>

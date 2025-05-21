@@ -113,9 +113,9 @@
                     class="space-y-6 rounded-2xl bg-cover p-6 text-center text-white"
                 >
                     <h3 class="text-left text-2xl font-semibold text-white">
-                        Cita Rasa Lokal
+                        Find Comfort
                         <br />
-                        Harga Super Lokal!
+                        in Our Flavours!
                     </h3>
                     <a
                         href="/food"

@@ -3,8 +3,6 @@
     class="{{ $isGrid ? 'h-full' : '' }} col-span-1 flex min-w-[40%] max-w-[180px] flex-1 flex-col rounded-2xl bg-white p-2 font-poppins transition-all shadow-lg hover:ring-2 hover:ring-inset hover:ring-[#2D5900]"
 >
 
-
-
     <div class="relative">
         <div
             class="absolute left-1.5 top-1.5 z-10 flex w-fit items-center gap-1.5 rounded-full bg-white px-2 py-1.5"
