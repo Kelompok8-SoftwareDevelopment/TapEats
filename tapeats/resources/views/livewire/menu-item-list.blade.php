@@ -5,7 +5,7 @@
                 class="relative flex cursor-pointer select-none items-center pl-6"
             >
                 <span class="-mt-0.5 text-sm font-medium text-black-50">
-                    Pilih Semua
+                    Select All
                 </span>
                 <input
                     type="checkbox"

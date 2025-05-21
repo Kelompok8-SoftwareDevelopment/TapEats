@@ -11,7 +11,7 @@
 
     <div class="container">
         <h2 class="mb-4 text-lg font-medium text-black-100">
-            Baru Ditambahkan
+            Newly Added
         </h2>
 
         @if (isset($cartItems) && count($cartItems) > 0)
