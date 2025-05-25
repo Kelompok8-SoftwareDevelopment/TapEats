@@ -28,9 +28,8 @@
                     Delete ({{ count($selectedItems) }})
                 </button>
                 <button
-                    x-bind:disabled="! {{ count($selectedItems) }} > 0"
                     wire:click="checkout"
-                    class="flex items-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10 disabled:bg-primary-30"
+                    class="flex items-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
                 >
                     <span>Order Now</span>
                     <img

@@ -66,13 +66,11 @@ class CartPage extends Component
 
     public function checkout()
     {
-        if (empty($this->selectedItems)) {
-            $this->addError('selectedItems', 'Please select at least one item to proceed.');
-            return;
-        }
-
+        if (empty($this->cartItems)) {
+        $this->addError('cartItems', 'Your cart is empty.');
+        return;
+    }
         session(['cart_items' => $this->cartItems]);
-
         return $this->redirect('/checkout', navigate: true);
     }
 
