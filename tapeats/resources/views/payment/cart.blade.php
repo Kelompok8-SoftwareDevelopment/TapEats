@@ -23,7 +23,10 @@
             <div class="mt-6 flex items-center justify-between">
                 <button
                     x-on:click="open = true"
-                    class="flex items-center gap-2 rounded-full bg-primary-10 px-6 py-3 font-semibold text-primary-50"
+                    :disabled="{{ count($selectedItems) < 1 ? 'true' : 'false' }}"
+                    class="flex items-center gap-2 rounded-full px-6 py-3 font-semibold {{ count($selectedItems) < 1 
+                    ? 'bg-primary-10 text-primary-50 opacity-50 cursor-not-allowed' 
+                    : 'bg-primary-10 text-primary-50' }}"
                 >
                     Delete ({{ count($selectedItems) }})
                 </button>
