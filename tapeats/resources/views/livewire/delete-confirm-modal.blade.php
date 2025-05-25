@@ -13,9 +13,9 @@
             <button
                 x-on:click="open = false"
                 type="button"
-                class="w-1/2 cursor-pointer rounded-full bg-primary-10 px-5 py-2 font-semibold text-primary-60 outline-none hover:bg-primary-20"
+                class="w-1/2 cursor-pointer rounded-full bg-[#2D5900] px-5 py-2 font-semibold text-white outline-none hover:bg-[#3b7a01]"
             >
-                Kembali
+                No
             </button>
             <button
                 type="submit"
@@ -23,9 +23,9 @@
                     $wire.$parent.deleteSelected()
                     open = false
                 "
-                class="w-1/2 cursor-pointer rounded-full bg-primary-50 px-5 py-2 font-semibold text-white hover:bg-primary-60"
+                class="w-1/2 cursor-pointer rounded-full bg-[#2D5900] px-5 py-2 font-semibold text-white hover:bg-[#3b7a01]"
             >
-                Yakin
+                Yes
             </button>
         </div>
     @endsection

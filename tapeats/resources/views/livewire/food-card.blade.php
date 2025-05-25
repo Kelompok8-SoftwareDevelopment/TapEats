@@ -5,16 +5,15 @@
     <div class="relative">
         <div
             class="absolute left-1.5 top-1.5 z-10 flex w-fit items-center gap-1.5 rounded-full bg-white px-2 py-1.5">
-            <img src="{{ asset("assets/icons/spoon-icon.svg") }}" alt="Sold" />
+            <img src="{{ asset('assets/icons/spoon-icon.svg') }}" alt="Sold" />
             <span class="text-xs font-semibold text-black-100">
                 {{ $data->total_sold ?? 0 }} Terjual
             </span>
         </div>
+
         @if ($data->is_promo)
         <div
-            style="
-                    background-image: url('{{ asset("assets/icons/discount-icon.svg") }}');
-                "
+            style="background-image: url('{{ asset('assets/icons/discount-icon.svg') }}');"
             class="absolute bottom-1.5 right-1.5 z-10 flex h-10 w-fit items-center gap-1.5 rounded-full bg-cover px-2 py-1.5">
             <span class="text-xs font-semibold text-white">
                 {{ $data->percent }}%
@@ -28,32 +27,38 @@
             class="aspect-square w-full rounded-xl object-cover"
             loading="lazy" />
     </div>
-    <div>
+
+    <div class="flex flex-col justify-between">
         <p class="py-2 font-semibold text-black-100">{{ $data->name }}</p>
+
         <div class="flex items-start gap-1 font-semibold text-black-100">
             <span>
-                <img src="{{ asset("assets/icons/price-icon.svg") }}" />
+                <img src="{{ asset('assets/icons/price-icon.svg') }}" />
             </span>
             <div>
                 <span>
-                    {{ $data->price_afterdiscount ? number_format($data->price_afterdiscount, 0, ",", ".") : number_format($data->price, 0, ",", ".") }}
+                    {{ number_format($data->price_afterdiscount ?? $data->price, 0, ',', '.') }}
                 </span>
                 @if ($data->is_promo)
-                <span
-                    class="-mt-1 block text-xs text-black-40 line-through">
-                    {{ number_format($data->price, 0, ",", ".") }}
+                <span class="-mt-1 block text-xs text-black-40 line-through">
+                    {{ number_format($data->price, 0, ',', '.') }}
                 </span>
                 @endif
             </div>
         </div>
-        <p
-            class="mt-1 flex items-center gap-1 text-xs font-medium text-black-100">
-            <span>
-                <img src="{{ asset("assets/icons/category-icon.svg") }}" />
-            </span>
-            <span>
-                {{ $matchedCategory ? $matchedCategory->name : "Unknown" }}
-            </span>
-        </p>
+
+        <div class="mt-1 flex items-center justify-between">
+            <div class="flex items-center gap-1 text-xs font-medium text-black-100">
+                <img src="{{ asset('assets/icons/category-icon.svg') }}" alt="Category" />
+                <span>{{ $matchedCategory ? $matchedCategory->name : 'Unknown' }}</span>
+            </div>
+            <button
+                wire:click.stop="addToCart"
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-[#2D5900] hover:bg-[#3e7a00] transition-all shadow-md">
+                <img src="{{ asset('assets/icons/plus3.svg') }}" alt="Add to cart" class="h-6 w-6" />
+            </button>
+        </div>
     </div>
+
+    <livewire:components.toast />
 </div>
