@@ -79,4 +79,16 @@ class CartPage extends Component
     {
         return view('payment.cart');
     }
+
+    public function deleteSingleItem($index)
+    {
+        $this->cartItems = collect($this->cartItems)
+            ->filter(fn($item, $i) => $i !== $index)
+            ->values()
+            ->toArray();
+        $cartItemIds = collect($this->cartItems)->map(fn($item) => $item['id'])->toArray();
+        session(['cart_items' => $cartItemIds]);
+        $this->updateSelectedItems();
+        $this->updateTotals();
+    }
 }

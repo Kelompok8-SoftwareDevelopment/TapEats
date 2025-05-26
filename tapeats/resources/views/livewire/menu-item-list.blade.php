@@ -69,17 +69,16 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <button
-                                    wire:click="$parent.decrement({{ $index }})"
-                                    class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50"
-                                >
-                                    -
-                                </button>
+                                wire:click="$parent.decrement({{ $index }})"
+                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50">
+                                -
+                            </button>
                                 <span class="mx-2 w-4 text-center">
                                     {{ $item["quantity"] }}
                                 </span>
                                 <button
-                                    wire:click="$parent.increment({{ $index }})"
-                                    class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50"
+                                wire:click="$parent.increment({{ $index }})"
+                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50"
                                 >
                                     +
                                 </button>
