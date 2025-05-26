@@ -3,17 +3,16 @@
 namespace App\Livewire\Pages;
 
 use App\Livewire\Traits\CartManagement;
-use App\Models\Foods;
+use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Session;
-use Livewire\Component;
 
 class CartPage extends Component
 {
     use CartManagement;
 
     public $foods;
-    public $title = "All Foods";
+    public $title = 'All Foods';
 
     public bool $selectAll = true;
 
@@ -21,6 +20,7 @@ class CartPage extends Component
 
     #[Session(key: 'cart_items')]
     public $cartItems = [];
+
     #[Session(key: 'has_unpaid_transaction')]
     public $hasUnpaidTransaction;
 
@@ -40,7 +40,10 @@ class CartPage extends Component
 
     public function updateSelectedItems()
     {
-        $this->selectedItems = collect($this->cartItems)->filter(fn($item) => $item['selected'])->toArray();
+        $this->selectedItems = collect($this->cartItems)
+            ->filter(fn($item) => $item['selected'] ?? false)
+            ->values()
+            ->toArray();
 
         $this->selectAll = count($this->selectedItems) === count($this->cartItems);
 
@@ -49,17 +52,18 @@ class CartPage extends Component
 
     public function deleteSelected()
     {
-        $this->cartItems = collect($this->cartItems)->filter(fn($item) => !$item['selected'])->toArray();
-
-        $selectedIds = collect($this->selectedItems)->map(fn($item) => $item['id'])->toArray();
-
-        $cartItemIds = collect(session('cart_items', []))
-            ->map(fn($item) => $item['id'])
+        $selectedIds = collect($this->selectedItems)
+            ->pluck('id')
             ->toArray();
 
-        $cartItemIds = array_diff($cartItemIds, $selectedIds);
+        $this->cartItems = collect($this->cartItems)
+            ->reject(fn($item) => in_array($item['id'], $selectedIds))
+            ->values()
+            ->toArray();
 
-        session(['cart_items' => $cartItemIds]);
+        session([
+            'cart_items' => $this->cartItems
+        ]);
 
         $this->selectedItems = [];
     }
