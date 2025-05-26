@@ -30,6 +30,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+
+            ->brandName('TapEats')
+            ->brandLogo(asset('favicon.svg'))
+            ->brandLogoHeight('2rem')
             ->favicon(asset('favicon.svg')) 
             ->colors([
                 'danger' => Color::Rose,

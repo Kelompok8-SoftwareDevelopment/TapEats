@@ -95,7 +95,7 @@
                 wire:click="orderNow"
                 class="flex items-center gap-2 rounded-full bg-[#2D5900] px-6 py-2 font-semibold text-black-10"
             >
-                <span>Pesan Sekarang</span>
+                <span>Checkout</span>
                 <img
                     src="{{ asset('assets/icons/arrow-right-white-icon.svg') }}"
                     alt="Cart"
