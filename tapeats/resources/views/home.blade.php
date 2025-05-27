@@ -1,4 +1,4 @@
-<div class="bg-white">
+<div class="bg-white min-h-screen">
     <header
         style="
             background-image: url('{{ asset("assets/images/ollies1.jpg") }}');
@@ -64,7 +64,7 @@
         <div wire:loading class="w-full">
             <div class="my-2 w-full">
                 <p class="text-center text-black-70">
-                    Mencari makanan...
+                    Hang tight, we’re finding your food...
                 </p>
             </div>
         </div>
@@ -165,7 +165,7 @@
             @if ($searchResult->isEmpty())
                 <div class="my-2 w-full">
                     <p class="text-center text-black-70">
-                        Makanan tidak ditemukan
+                        No matching food items found
                     </p>
                 </div>
             @else
