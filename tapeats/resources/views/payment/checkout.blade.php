@@ -41,7 +41,7 @@
                 Makanan yang dipesan
             </h2>
 
-            <livewire:components.menu-item-list
+            <livewire:components.checkout-item-list
                 :withCheckbox="false"
                 :items="$cartItems"
                 wire:key="{{ str()->random(50) }}"
