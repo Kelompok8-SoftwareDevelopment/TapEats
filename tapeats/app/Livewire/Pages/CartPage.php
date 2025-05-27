@@ -70,13 +70,11 @@ class CartPage extends Component
 
     public function checkout()
     {
-        if (empty($this->selectedItems)) {
-            $this->addError('selectedItems', 'Please select at least one item to proceed.');
-            return;
-        }
-
+        if (empty($this->cartItems)) {
+        $this->addError('cartItems', 'Your cart is empty.');
+        return;
+    }
         session(['cart_items' => $this->cartItems]);
-
         return $this->redirect('/checkout', navigate: true);
     }
 
@@ -84,5 +82,17 @@ class CartPage extends Component
     public function render()
     {
         return view('payment.cart');
+    }
+
+    public function deleteSingleItem($index)
+    {
+        $this->cartItems = collect($this->cartItems)
+            ->filter(fn($item, $i) => $i !== $index)
+            ->values()
+            ->toArray();
+        $cartItemIds = collect($this->cartItems)->map(fn($item) => $item['id'])->toArray();
+        session(['cart_items' => $cartItemIds]);
+        $this->updateSelectedItems();
+        $this->updateTotals();
     }
 }

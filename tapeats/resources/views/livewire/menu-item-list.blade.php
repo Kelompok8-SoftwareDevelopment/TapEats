@@ -38,47 +38,50 @@
                 </label>
                 @endif
 
-                <img
-                    src="{{ Storage::url($item['image']) }}"
-                    alt="{{ $item['name'] }}"
-                    class="ml-2 h-16 w-16 rounded-lg" />
-                <div class="ml-4 w-full space-y-2">
-                    <p class="font-semibold text-black-100">
-                        {{ $item['name'] }}
-                    </p>
-                    <div class="flex w-full items-center justify-between">
-                        <div>
-                            <span class="block font-semibold text-black-50">
-                                RP
-                                {{ $item['price_afterdiscount'] ? number_format($item['price_afterdiscount'], 0, ',', '.') : number_format($item['price'], 0, ',', '.') }}
-                            </span>
-                            @if ($item['is_promo'])
-                            <span class="-mt-1 block text-sm text-black-30 line-through">
-                                RP {{ number_format($item['price'], 0, ',', '.') }}
-                            </span>
-                            @endif
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button
+                    <img
+                        src="{{ Storage::url($item["image"]) }}"
+                        alt="{{ $item["name"] }}"
+                        class="ml-2 h-16 w-16 rounded-lg"
+                    />
+                    <div class="ml-4 w-full space-y-2">
+                        <p class="font-semibold text-black-100">
+                            {{ $item["name"] }}
+                        </p>
+                        <div class="flex w-full items-center justify-between">
+                            <div>
+                                <span class="block font-semibold text-black-50">
+                                    RP
+                                    {{ $item["price_afterdiscount"] ? number_format($item["price_afterdiscount"], 0, ",", ".") : number_format($item["price"], 0, ",", ".") }}
+                                </span>
+                                @if ($item["is_promo"])
+                                    <span
+                                        class="-mt-1 block text-sm text-black-30 line-through"
+                                    >
+                                        RP
+                                        {{ number_format($item["price"], 0, ",", ".") }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button
                                 wire:click="$parent.decrement({{ $index }})"
-                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50
-                                    hover:border-[#2D5900] hover:text-[#2D5900] focus:border-[#2D5900] focus:text-[#2D5900]">
+                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50">
                                 -
                             </button>
-                            <span class="mx-2 w-4 text-center">
-                                {{ $item['quantity'] }}
-                            </span>
-                            <button
+                                <span class="mx-2 w-4 text-center">
+                                    {{ $item["quantity"] }}
+                                </span>
+                                <button
                                 wire:click="$parent.increment({{ $index }})"
-                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50
-                                    hover:border-[#2D5900] hover:text-[#2D5900] focus:border-[#2D5900] focus:text-[#2D5900]">
-                                +
-                            </button>
+                                class="aspect-square h-8 w-8 rounded-full border border-black-30 bg-white p-1 px-2 py-1 text-black-50 hover:border-primary-50 hover:text-primary-50 focus:border-primary-50 focus:text-primary-50"
+                                >
+                                    +
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endforeach
     </div>
 </div>

@@ -39,7 +39,7 @@ class CheckoutPage extends Component
         $this->name = session('name');
         $this->phone = session('phone');
         if (empty($this->cartItems)) {
-            return redirect()->route('product.cart');
+            return redirect()->route('payment.cart');
         }
 
         $this->paymentToken = Str::random(32);
@@ -52,5 +52,17 @@ class CheckoutPage extends Component
     public function render()
     {
         return view('payment.checkout');
+    }
+
+     public function deleteSingleItem($index)
+    {
+        $this->cartItems = collect($this->cartItems)
+            ->filter(fn($item, $i) => $i !== $index)
+            ->values()
+            ->toArray();
+        $cartItemIds = collect($this->cartItems)->map(fn($item) => $item['id'])->toArray();
+        session(['cart_items' => $cartItemIds]);
+        $this->updateSelectedItems();
+        $this->updateTotals();
     }
 }
