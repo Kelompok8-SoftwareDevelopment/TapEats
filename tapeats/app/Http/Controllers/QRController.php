@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Barcodes;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class QRController extends Controller
 {
-    public function storeResult(Request $request)
+    public function storeResult(Request $request): JsonResponse
     {
         $request->validate([
             'table_number' => 'required|string',
@@ -25,14 +26,16 @@ class QRController extends Controller
 
             if ($exists) {
                 session(['table_number' => $code]);
-                return view('home', [
-                    'message' => 'Welcome! Code verified successfully.',
-                ]);
+                return redirect()->route('home')->with('message', 'Welcome! Code verified successfully.');
             } else {
                 return view('invalid', [
                     'message' => 'Code not found in the database.',
                 ]);
             }
         }
+
+        return view('invalid', [
+            'message' => 'Invalid code format.',
+        ]);
     }
 }

@@ -11,7 +11,7 @@
                     <img
                         src="{{ asset("assets/images/logo-tapeats.png") }}"
                         class="w-12 h-12 object-contain"
-                        alt="MyFOOD logo"
+                        alt="TapEats logo"
                     />
                     <span class="text-lg font-semibold text-black">
                         TapEats
