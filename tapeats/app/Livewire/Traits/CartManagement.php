@@ -13,13 +13,15 @@ trait CartManagement
     }
 
     public function decrement($index)
-    {
-        if ($this->cartItems[$index]['quantity'] > 1) {
-            $this->cartItems[$index]['quantity']--;
-        }
+{
+    if ($this->cartItems[$index]['quantity'] > 1) {
+        $this->cartItems[$index]['quantity']--;
         $this->hasUnpaidTransaction = false;
         $this->updateTotals();
+    } else {
+        $this->deleteSingleItem($index);
     }
+}
 
     public function updateTotals()
     {

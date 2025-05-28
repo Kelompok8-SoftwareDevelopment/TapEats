@@ -9,10 +9,14 @@ class CheckTableNumber
 {
     public function handle(Request $request, Closure $next)
     {
-        // --- [DEV MODE ONLY] ---
-        // Jika tidak ada session table_number, isi dengan default sementara
+        // Izinkan akses ke halaman scan dan store QR
+        if ($request->is('scan') || $request->is('store-qr-result')) {
+            return $next($request);
+        }
+
+        // Cek apakah table_number ada di session
         if (!$request->session()->has('table_number')) {
-            session(['table_number' => 99]); // Ganti dengan angka default meja test
+            return redirect()->route('product.scan');
         }
 
         return $next($request);

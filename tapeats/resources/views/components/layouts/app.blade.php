@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-@livewireStyles
 
 <head>
     <meta charset="utf-8" />
@@ -13,13 +12,10 @@
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
     <!-- <script src="{{ asset('js/app.js') }}"></script> -->
 
-    <script
-        src="https://unpkg.com/html5-qrcode"
-        type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/app.js') }}"></script>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet" />
+    <script src="https://unpkg.com/html5-qrcode@2.3.7/html5-qrcode.min.js"></script>
 
 
 
@@ -27,9 +23,9 @@
     @vite('resources/css/app.css')
 </head>
 
-
-<body class="{{ $class ?? "" }} mx-auto max-w-md bg-[#f5f5f9]">
+<body class="{{ $class ?? '' }} mx-auto max-w-md bg-[#f5f5f9]">
     {{ $slot }}
+
     @livewireScripts
     @vite('resources/js/app.js')
 </body>
