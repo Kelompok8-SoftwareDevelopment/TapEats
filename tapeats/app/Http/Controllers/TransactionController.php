@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Barcode;
+use App\Models\Barcodes;
 use App\Models\Category;
 use App\Models\Foods;
 use App\Models\Transaction;
@@ -73,33 +73,33 @@ class TransactionController extends Controller
             ], 400);
         }
 
-        $tableNumberId = Barcode::where('table_number', $tableNumber)->first();
+        $tableNumberId = Barcodes::where('table_number', $tableNumber)->first();
 
         $transactionCode = 'TRX_' . mt_rand(100000, 999999);
 
         try {
             $subTotal = 0;
             $items = collect($cartItems)
-            ->map(function ($item) use (&$subTotal) {
-                $price = isset($item['price_afterdiscount']) ? $item['price_afterdiscount'] : $item['price'];
+                ->map(function ($item) use (&$subTotal) {
+                    $price = isset($item['price_afterdiscount']) ? $item['price_afterdiscount'] : $item['price'];
 
-                $category = Category::find($item['categories_id'])->name;
+                    $category = Category::find($item['categories_id'])->name;
 
-                $foodSubtotal = $price * $item['quantity'];
-                $subTotal += $foodSubtotal;
+                    $foodSubtotal = $price * $item['quantity'];
+                    $subTotal += $foodSubtotal;
 
-                $url = route('product.detail', ['id' => $item['id']]);
+                    $url = route('product.detail', ['id' => $item['id']]);
 
-                return [
-                    'name' => $item['name'],
-                    'quantity' => $item['quantity'],
-                    'price' => (int) $price,
-                    'category' => $category,
-                    'url' => $url,
-                ];
-            })
-            ->values()
-            ->toArray();
+                    return [
+                        'name' => $item['name'],
+                        'quantity' => $item['quantity'],
+                        'price' => (int) $price,
+                        'category' => $category,
+                        'url' => $url,
+                    ];
+                })
+                ->values()
+                ->toArray();
 
 
             $ppn = 0.11 * $subTotal;
@@ -134,7 +134,7 @@ class TransactionController extends Controller
                 ],
                 "customer_notification_preference" => [
                     "invoice_paid" => [
-                      "whatsapp",
+                        "whatsapp",
                     ]
                 ],
             ]);
@@ -171,7 +171,6 @@ class TransactionController extends Controller
             session(['has_unpaid_transaction' => true]);
 
             return redirect($invoice['invoice_url']);
-
         } catch (\Exception $e) {
             Log::error('Failed to create invoice', [
                 'message' => $e->getMessage(),
@@ -208,7 +207,6 @@ class TransactionController extends Controller
             return response()->json([
                 'success' => true
             ]);
-
         } catch (\Exception $e) {
             Log::error('Failed to get invoice', [
                 'message' => $e->getMessage(),
@@ -253,7 +251,6 @@ class TransactionController extends Controller
                 'status' => $status,
                 'payment_method' => $payment_method,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Failed to handle webhook', [
                 'message' => $e->getMessage(),
@@ -264,7 +261,6 @@ class TransactionController extends Controller
                 'message' => 'Failed to handle webhook.',
             ], 500);
         }
-
     }
 
     public function clearSession()

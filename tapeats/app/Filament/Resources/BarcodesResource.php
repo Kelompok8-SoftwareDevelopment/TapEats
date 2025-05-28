@@ -46,7 +46,7 @@ class BarcodesResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('table_number')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                // Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('qr_value')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('users.name')

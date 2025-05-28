@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('TapEats')
             ->brandLogo(asset('favicon.svg'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('favicon.svg')) 
+            ->favicon(asset('favicon.svg'))
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Zinc,
@@ -47,9 +47,7 @@ class AdminPanelProvider extends PanelProvider
             ->darkMode(true)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
+            ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
