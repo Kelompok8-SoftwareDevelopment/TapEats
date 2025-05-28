@@ -11,7 +11,7 @@
         "laravel/framework": "^12.13.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
-        "simplesoftwareio/simple-qrcode": "~4",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "xendit/xendit-php": "^6.0"
     },
     "require-dev": {
