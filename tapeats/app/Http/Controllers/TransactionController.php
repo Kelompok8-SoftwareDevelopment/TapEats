@@ -224,7 +224,8 @@ class TransactionController extends Controller
         $webhookToken = $request->header('x-callback-token');
 
         $expectedToken = config('xendit.webhook_token');
-
+Log::info('Webhook token received: ' . $webhookToken);
+    Log::info('Expected webhook token: ' . $expectedToken);
         if ($webhookToken !== $expectedToken) {
             return response()->json([
                 'message' => 'Unauthorized webhook request.',
