@@ -31,10 +31,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
 
-            ->brandName('TapEats')
-            ->brandLogo(asset('favicon.svg'))
+            ->brandName('OLLIES')
+            ->brandLogo(asset('logo_ollies1.webp'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('favicon.svg'))
+            ->favicon(asset('logo_ollies2_favicon1.png')) 
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Zinc,

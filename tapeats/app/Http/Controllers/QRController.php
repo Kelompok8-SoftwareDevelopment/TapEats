@@ -16,7 +16,7 @@ class QRController extends Controller
 
         session(['table_number' => $request->table_number]);
 
-        return response()->json(['status' => 'success']);
+        return response()->json(['redirect' => route('home')]); // ✅ return URL redirect
     }
 
     public function checkCode($code)

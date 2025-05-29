@@ -1,4 +1,4 @@
-<x-modal :title="'Filter'" :showClose="true">
+<!-- <x-modal :title="'Filter'" :showClose="true">
     @section("content")
         <div class="space-y-2 pb-4 pt-2">
             @php
@@ -100,4 +100,4 @@
             </button>
         </div>
     @endsection
-</x-modal>
+</x-modal> -->
