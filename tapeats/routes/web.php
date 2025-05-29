@@ -15,13 +15,21 @@ use App\Livewire\Pages\PaymentSuccessPage;
 use App\Livewire\Pages\ScanPage;
 use Illuminate\Support\Facades\Route;
 
-// Halaman scan & simpan hasil scan (tanpa middleware)
+Route::get('/', function () {
+    if (!session()->has('table_number')) {
+        return redirect()->route('product.scan');
+    }
+
+    return redirect()->route('home');
+});
+
+// Scan Page dan store result (tanpa middleware)
 Route::get('/scan', ScanPage::class)->name('product.scan');
 Route::post('/store-qr-result', [QRController::class, 'storeResult'])->name('product.scan.store');
 
-// ✅ Semua route di bawah hanya bisa diakses jika sudah scan barcode (session "table_number")
+// Group dengan middleware jika sudah scan
 Route::middleware(CheckTableNumber::class)->group(function () {
-    Route::get('/', HomePage::class)->name('home');
+    Route::get('/home', HomePage::class)->name('home');
     Route::get('/food', AllFoodPage::class)->name('product.index');
     Route::get('/food/favorite', FavoritePage::class)->name('product.favorite');
     Route::get('/food/promo', PromoPage::class)->name('product.promo');
@@ -37,8 +45,8 @@ Route::middleware(CheckTableNumber::class)->group(function () {
     Route::get('/payment/failure', PaymentFailurePage::class)->name('payment.failure');
 });
 
-// Webhook (tanpa middleware)
+// Webhook
 Route::post('/payment/webhook', [TransactionController::class, 'handleWebhook'])->name('payment.webhook');
 
-// Optional: QR route dari barcode langsung
+// Optional QR code access via direct link
 Route::get('/{code}', [QRController::class, 'checkCode'])->name('product.scan.code');
