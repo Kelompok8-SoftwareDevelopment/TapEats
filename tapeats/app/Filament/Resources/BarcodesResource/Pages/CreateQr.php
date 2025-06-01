@@ -22,7 +22,27 @@ class CreateQr extends Page
     public function mount(): void
     {
         $this->form->fill();
-        $this->table_number = strtoupper(chr(rand(65, 90)) . rand(1000, 9999));
+
+        $usedNumbers = Barcodes::pluck('table_number')
+            ->map(function ($number) {
+                return (int) preg_replace('/[^\d]/', '', $number);
+            })
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->toArray();
+
+        $nextNumber = 1;
+
+        foreach ($usedNumbers as $used) {
+            if ($used != $nextNumber) {
+                break;
+            }
+            $nextNumber++;
+        }
+
+        $this->table_number = 'T' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
     }
 
     public function form(Form $form): Form
@@ -38,18 +58,22 @@ class CreateQr extends Page
 
     public function save(): void
     {
+        // Validasi apakah table_number sudah ada
+        if (Barcodes::where('table_number', $this->table_number)->exists()) {
+            Notification::make()
+                ->title('Duplicate Table Number')
+                ->danger()
+                ->body("Table number {$this->table_number} already exists.")
+                ->send();
+            return;
+        }
+
         $host = $_SERVER['HTTP_HOST'] . '/' . $this->table_number;
 
-        // Generate Qr Code (SVG IMAGE)
         $svgContent = QrCode::margin(1)->size(200)->generate($host);
-
-        // File path buat nyimpen SVG
         $svgFilePath = 'qr_codes/' . $this->table_number . '.svg';
-
-        // Save Gambarnya ke storage
         Storage::disk('public')->put($svgFilePath, $svgContent);
 
-        // Save ke tabel barcode
         Barcodes::create([
             'table_number' => $this->table_number,
             'users_id' => Auth::user()->id,
@@ -57,14 +81,12 @@ class CreateQr extends Page
             'qr_value' => $host
         ]);
 
-        // Notifikasi 
         Notification::make()
             ->title('QR Code Created')
             ->success()
             ->icon('heroicon-o-check-circle')
             ->send();
 
-        //Redirect ke barcode list
         $this->redirect(url('admin/barcodes'));
     }
 }

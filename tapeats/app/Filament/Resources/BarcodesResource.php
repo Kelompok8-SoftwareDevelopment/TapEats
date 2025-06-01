@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
 
 class BarcodesResource extends Resource
 {
@@ -22,22 +23,22 @@ class BarcodesResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('table_number')
-                    ->required()
-                    ->default(fn() => strtoupper(chr(rand(65, 90)) . rand(1000, 9999))),
-                Forms\Components\FileUpload::make('image')
-                    ->image()
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('users_id')
-                    ->required()
-                    ->relationship('users', 'name'),
-                Forms\Components\TextInput::make('qr_value')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+    return $form
+        ->schema([
+            Forms\Components\TextInput::make('table_number')
+            ->required()
+            ->unique(ignoreRecord: true),
+            Forms\Components\FileUpload::make('image')
+                ->image()
+                ->required()
+                ->columnSpanFull(),
+            Forms\Components\Select::make('users_id')
+                ->required()
+                ->relationship('users', 'name'),
+            Forms\Components\TextInput::make('qr_value')
+                ->required()
+                ->maxLength(255),
+        ]);
     }
 
     public static function table(Table $table): Table
