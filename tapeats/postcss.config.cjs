@@ -1,14 +1,6 @@
 module.exports = {
-<<<<<<< Updated upstream
-  plugins: {
-    '@tailwindcss/postcss': {},
-    autoprefixer: {},
-  },
-};
-=======
   plugins: [
-    require('@tailwindcss/postcss'),
+    require('tailwindcss'),
     require('autoprefixer'),
   ]
 }
->>>>>>> Stashed changes
