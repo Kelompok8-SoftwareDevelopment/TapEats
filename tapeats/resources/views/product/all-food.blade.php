@@ -9,35 +9,35 @@
     <div class="container px-4 pt-2">
         <div class="flex gap-2 overflow-x-auto pb-2">
             {{-- "All" Button --}}
+            @php
+                $isActive = is_null($selectedCategory);
+            @endphp
+
             <button
                 wire:click="selectCategory"
-                class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0"
-                style="
-                    background-color: {{ is_null($selectedCategory) ? '#b7e4c7' : '#ffffff' }};
-                    color: {{ is_null($selectedCategory) ? '#2D5900' : '#000000' }};
-                    border-color: {{ is_null($selectedCategory) ? '#b7e4c7' : '#d1d5db' }};
-                "
+                class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0
+                    {{ $isActive ? 'bg-[#b7e4c7] text-[#2D5900] border-[#b7e4c7]' : 'bg-white text-black border-gray-300 hover:bg-[#e6f4eb] hover:border-[#b7e4c7] hover:text-[#2D5900]' }}"
             >
                 All
             </button>
 
             {{-- Other Categories --}}
             @foreach ($categories as $category)
+                @php
+                    $isActive = $selectedCategory === $category->id;
+                @endphp
+
                 <button
                     wire:click="selectCategory({{ $category->id }})"
-                    class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0"
-                    style="
-                        background-color: {{ $selectedCategory === $category->id ? '#b7e4c7' : '#ffffff' }};
-                        color: {{ $selectedCategory === $category->id ? '#2D5900' : '#000000' }};
-                        border-color: {{ $selectedCategory === $category->id ? '#b7e4c7' : '#d1d5db' }};
-                    "
+                    class="rounded-full px-4 py-2 text-sm font-medium border transition shrink-0
+                        {{ $isActive ? 'bg-[#b7e4c7] text-[#2D5900] border-[#b7e4c7]' : 'bg-white text-black border-gray-300 hover:bg-[#e6f4eb] hover:border-[#b7e4c7] hover:text-[#2D5900]' }}"
                 >
                     {{ $category->name }}
                 </button>
             @endforeach
         </div>
     </div>
-
+    
     {{-- Food Card List --}}
     <div class="container mt-4 mb-24 grid grid-cols-2 gap-4">
         @if (isset($filteredProducts) && count($filteredProducts) > 0)
