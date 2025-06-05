@@ -87,6 +87,9 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('code')
                     ->label('Transaction Code')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('barcodes_id')
+                    ->label('Table Number')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Customer Name')
                     ->searchable(),
