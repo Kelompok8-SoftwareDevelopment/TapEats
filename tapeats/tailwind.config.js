@@ -17,6 +17,7 @@ export default {
               poppins: ["Poppins", ...defaultTheme.fontFamily.sans],
             },
             colors: {
+              
               primary: {
                 100: "#5C2500",
                 90: "#853500",
@@ -45,7 +46,8 @@ export default {
                 100: "#274800",
                 90: "#3E7000",
                 80: "#549900",
-                70: "#6EC207",
+                //ganti 70 jadi warna ollies
+                70: "#0C592F",
                 60: "#8EEB1D",
                 50: "#ADFF48",
                 40: "#BFFF70",
