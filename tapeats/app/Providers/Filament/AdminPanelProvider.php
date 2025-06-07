@@ -30,11 +30,12 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-
+            ->passwordReset()
+            ->profile()
             ->brandName('OLLIES')
             ->brandLogo(asset('logo_ollies1.webp'))
             ->brandLogoHeight('2rem')
-            ->favicon(asset('logo_ollies2_favicon1.png')) 
+            ->favicon(asset('logo_ollies2_favicon1.png'))
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Zinc,
@@ -52,6 +53,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
             ])
+            ->authMiddleware([
+                Authenticate::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -62,9 +66,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
+
             ]);
     }
 }
