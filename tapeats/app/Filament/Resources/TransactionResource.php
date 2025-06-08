@@ -18,6 +18,8 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Route;
+use App\Exports\TransactionsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransactionResource extends Resource
 {
@@ -191,7 +193,14 @@ class TransactionResource extends Resource
                         ])
                     ),
             ])
-            ->bulkActions([]);
+            ->bulkActions([
+                Tables\Actions\BulkAction::make('exportExcel')
+                    ->label('Export to Excel')
+                    ->action(function ($records) {
+                        return Excel::download(new TransactionsExport($records), 'selected-transactions.xlsx');
+                    })
+                    ->deselectRecordsAfterCompletion(),
+            ]);
     }
 
     public static function getRelations(): array

@@ -7,10 +7,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "filament/filament": "^3.2",
         "laravel/framework": "^12.13.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "maatwebsite/excel": "^3.1",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "xendit/xendit-php": "^6.0"
     },
