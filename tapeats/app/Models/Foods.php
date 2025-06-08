@@ -10,7 +10,7 @@ class Foods extends Model
 {
     use HasFactory;
     use Search;
-    protected $fillable = ['name', 'description', 'image', 'price', 'price_afterdiscount', 'percent', 'is_promo', 'categories_id'];
+    protected $fillable = ['name', 'description', 'image', 'price', 'price_afterdiscount', 'percent', 'is_promo', 'categories_id', 'status'];
     protected $searchable = ['name', 'description'];
     public function categories()
     {

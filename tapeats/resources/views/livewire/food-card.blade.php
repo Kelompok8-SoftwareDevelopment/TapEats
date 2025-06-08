@@ -1,6 +1,9 @@
 <div
-    wire:click="showDetails"
-    class="{{ $isGrid ? 'h-full' : '' }} col-span-1 flex min-w-[40%] max-w-[180px] flex-1 flex-col rounded-2xl bg-white p-2 font-poppins transition-all shadow-lg hover:ring-2 hover:ring-inset hover:ring-[#2D5900]">
+    @if ($data->status !== 'out_of_stock')
+        wire:click="showDetails"
+    @endif
+    class="{{ $isGrid ? 'h-full' : '' }} col-span-1 flex min-w-[40%] max-w-[180px] flex-1 flex-col rounded-2xl bg-white p-2 font-poppins transition-all shadow-lg
+        {{ $data->status === 'out_of_stock' ? 'cursor-not-allowed opacity-60' : 'hover:ring-2 hover:ring-inset hover:ring-[#2D5900]' }}">
 
     <div class="relative">
         <div
@@ -24,7 +27,7 @@
         <img
             src="{{ Storage::url($data->image) }}"
             alt="{{ $data->name }}"
-            class="aspect-square w-full rounded-xl object-cover"
+            class="aspect-square w-full rounded-xl object-cover {{ $data->status === 'out_of_stock' ? 'opacity-50' : '' }}"
             loading="lazy" />
     </div>
 
@@ -53,9 +56,17 @@
                 <span>{{ $matchedCategory ? $matchedCategory->name : 'Unknown' }}</span>
             </div>
             <button
-                wire:click.stop="addToCart"
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-[#2D5900] hover:bg-[#3e7a00] transition-all shadow-md">
-                <img src="{{ asset('assets/icons/plus3.svg') }}" alt="Add to cart" class="h-6 w-6" />
+                @if ($data->status === 'out_of_stock')
+                    <div class="rounded-full bg-gray-300 px-3 py-1 text-xs font-semibold text-white">
+                        Sold
+                    </div>
+                @else
+                <button
+                    wire:click.stop="addToCart"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-[#2D5900] hover:bg-[#3e7a00] transition-all shadow-md">
+                    <img src="{{ asset('assets/icons/plus3.svg') }}" alt="Add to cart" class="h-6 w-6" />
+                </button>
+            @endif
             </button>
         </div>
     </div>

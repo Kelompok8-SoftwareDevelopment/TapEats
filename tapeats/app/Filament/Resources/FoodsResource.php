@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Support\Collection;
 use App\Filament\Resources\FoodsResource\Pages;
 use App\Filament\Resources\FoodsResource\RelationManagers;
 use App\Models\Foods;
@@ -119,6 +120,14 @@ class FoodsResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable()
+                    ->badge()
+                    ->colors([
+                        'success' => 'available',
+                        'danger' => 'out_of_stock',
+                    ]),
+
             ])
             ->filters([
                 //
@@ -129,9 +138,31 @@ class FoodsResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+
+                    Tables\Actions\BulkAction::make('Set Out Of Stock')
+                        ->label('Set Out Of Stock')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->action(function (Collection $records) {
+                        foreach ($records as $record) {
+                    $record->update(['status' => 'out_of_stock']);
+                        }
+                    })
+                    ->deselectRecordsAfterCompletion(),
+
+                    Tables\Actions\BulkAction::make('Set Available')
+                        ->label('Set Available')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(function (Collection $records) {
+                        foreach ($records as $record) {
+                    $record->update(['status' => 'available']);
+                }
+            })
+            ->deselectRecordsAfterCompletion(),
+        ]),
+    ]);
+}
 
     public static function getRelations(): array
     {
