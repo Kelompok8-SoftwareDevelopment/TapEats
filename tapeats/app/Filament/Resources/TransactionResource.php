@@ -121,15 +121,15 @@ class TransactionResource extends Resource
                     ->label('Transaction Time')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
                 // filter berdasarkan pembayaran
                 Tables\Filters\SelectFilter::make('payment_method')
                     ->label('Payment Method')
                     ->options([
-                        'CASH' => 'Cash',                     
-                        'QRIS' => 'QRIS',                     
+                        'CASH' => 'Cash',
+                        'QRIS' => 'QRIS',
                         'EWALLET_DANA' => 'DANA',
                         'EWALLET_OVO' => 'OVO',
                         'EWALLET_LINKAJA' => 'LinkAja',
