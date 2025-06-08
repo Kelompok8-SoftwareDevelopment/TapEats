@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use Illuminate\Support\Collection;
+use Filament\Tables\Columns\TextInputColumn;
 use App\Filament\Resources\FoodsResource\Pages;
 use App\Filament\Resources\FoodsResource\RelationManagers;
 use App\Models\Foods;
@@ -82,6 +83,16 @@ class FoodsResource extends Resource
                     ->required()
                     ->columnSpanFull()
                     ->relationship('categories', 'name'),
+
+                Forms\Components\TextInput::make('stock')
+                    ->label('Stock')
+                    ->numeric()
+                    ->minValue(0)
+                    ->required()
+                    ->default(0)
+                    ->columnSpanFull()
+                    ->rules(['required', 'integer', 'min:0']),
+
             ]);
     }
 
@@ -109,8 +120,9 @@ class FoodsResource extends Resource
                 Tables\Columns\TextColumn::make('is_promo')
                     ->sortable()
                     ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No'),
-
                 Tables\Columns\TextColumn::make('categories.name')
+                    ->label('Category')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -128,6 +140,14 @@ class FoodsResource extends Resource
                         'danger' => 'out_of_stock',
                     ]),
 
+                TextInputColumn::make('stock')
+                    ->label('Stock')
+                    ->sortable()
+                    ->rules(['required', 'integer', 'min:0'])
+                    ->extraAttributes(fn($state) => [
+                        'class' => $state <= 5 ? 'text-red-500 font-semibold font-mono' : 'text-green-600 font-semibold font-mono',
+                    ])
+
             ])
             ->filters([
                 //
@@ -144,25 +164,27 @@ class FoodsResource extends Resource
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->action(function (Collection $records) {
-                        foreach ($records as $record) {
-                    $record->update(['status' => 'out_of_stock']);
-                        }
-                    })
-                    ->deselectRecordsAfterCompletion(),
+                            foreach ($records as $record) {
+                                $record->update(['status' => 'out_of_stock']);
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
 
                     Tables\Actions\BulkAction::make('Set Available')
                         ->label('Set Available')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->action(function (Collection $records) {
-                        foreach ($records as $record) {
-                    $record->update(['status' => 'available']);
-                }
-            })
-            ->deselectRecordsAfterCompletion(),
-        ]),
-    ]);
-}
+                            foreach ($records as $record) {
+                                if ($record->stock > 0) {
+                                    $record->update(['status' => 'available']);
+                                }
+                            }
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ]),
+            ]);
+    }
 
     public static function getRelations(): array
     {

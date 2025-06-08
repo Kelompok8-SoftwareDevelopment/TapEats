@@ -10,7 +10,7 @@ class Foods extends Model
 {
     use HasFactory;
     use Search;
-    protected $fillable = ['name', 'description', 'image', 'price', 'price_afterdiscount', 'percent', 'is_promo', 'categories_id', 'status'];
+    protected $fillable = ['name', 'description', 'image', 'price', 'price_afterdiscount', 'percent', 'is_promo', 'categories_id', 'status', 'stock'];
     protected $searchable = ['name', 'description'];
     public function categories()
     {
@@ -56,5 +56,16 @@ class Foods extends Model
             ->groupBy('foods.id')
             ->orderByDesc('total_sold')
             ->get();
+    }
+
+    protected static function booted()
+    {
+        static::saving(function ($food) {
+            if ($food->stock <= 0) {
+                $food->status = 'out_of_stock';
+            } elseif ($food->status === 'out_of_stock' && $food->stock > 0) {
+                $food->status = 'available';
+            }
+        });
     }
 }
