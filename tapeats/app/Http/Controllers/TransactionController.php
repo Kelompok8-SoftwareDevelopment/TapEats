@@ -33,10 +33,31 @@ class TransactionController extends Controller
 
     public function handlePayment(Request $request)
     {
+        Log::info('Session sebelum payment:', session()->all());
+        
         $action = $request->input('action');
         Log::info('handlePayment called with action: ' . $action . ', request: ' . json_encode($request->all()));
 
         if ($action === 'pay') {
+            // Jika ada transaksi unpaid di session
+            if (session()->has('has_unpaid_transaction')) {
+                $externalId = session('external_id');
+                $tx = Transaction::where('external_id', $externalId)->first();
+
+                 if ($tx && $tx->payment_status === 'PENDING') {
+                Log::info("Masih PENDING, redirect ke checkout_link lama: {$tx->checkout_link}");
+                return redirect($tx->checkout_link);
+            }
+
+            // Kalau sudah PAID atau EXPIRED, clear session agar bisa buat invoice baru
+            session()->forget([
+                'has_unpaid_transaction',
+                'external_id',
+                'checkout_link',
+            ]);
+            Log::info('Session setelah clear (expired/paid):', session()->all());
+            }
+            // Tidak ada pending, lanjut bikin invoice baru
             return $this->processPayment($request);
         }
 
@@ -50,7 +71,11 @@ class TransactionController extends Controller
             }
 
             $transaction = Transaction::where('external_id', $externalId)->first();
-            Log::info('Transaction found for continue: ' . ($transaction ? $transaction->id : 'null'));
+            if (! $transaction) {
+                Log::warning("Transaction dengan external_id {$externalId} tidak ditemukan");
+                return view('payment.failure');
+            }
+
             return redirect($transaction->checkout_link);
         }
 
@@ -227,6 +252,11 @@ class TransactionController extends Controller
             $payment_method = $data['payment_method'];
             Log::info('Webhook data extracted - external_id: ' . $external_id . ', status: ' . $status . ', payment_method: ' . $payment_method);
 
+            if(! $external_id || ! $status){
+                Log::warning('Invalid webhook payload: missing external_id or status');
+                return response()->json(['message' => 'Invalid paylod'], 400);
+            }
+
             $transaction = Transaction::where('external_id', $external_id)->first();
             if (!$transaction) {
                 Log::warning('Transaction not found for external_id: ' . $external_id);
@@ -234,13 +264,23 @@ class TransactionController extends Controller
             }
 
             $transaction->payment_status = $status;
-            $transaction->payment_method = $payment_method;
-            $transaction->updated_at = $data['updated'] ?? now();
+            if ($payment_method) {
+                $transaction->payment_method = $payment_method;
+            }
             $transaction->save();
             Log::info('Transaction updated, id: ' . $transaction->id . ', new status: ' . $status);
 
-            $this->clearSession();
-            Log::info('Session cleared after webhook');
+            if (in_array($status, ['PAID', 'EXPIRED'], true)) {
+                session()->forget([
+                    'has_unpaid_transaction',
+                    'external_id',
+                    'checkout_link',
+                ]);
+                 Log::info("Session cleared after webhook for status: {$status}");
+            }
+
+            // $this->clearSession();
+            // Log::info('Session cleared after webhook');
 
             return response()->json([
                 'code' => 200,
