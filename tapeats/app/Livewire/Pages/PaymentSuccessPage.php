@@ -9,7 +9,7 @@ class PaymentSuccessPage extends Component
 {
     public function mount()
     {
-        session()->forget(['external_id', 'has_unpaid_transaction', 'cart_items', 'payment_token']);
+        session()->forget(['external_id', 'has_unpaid_transaction', 'cart_items', 'payment_token', 'checkout_link']);
         session()->save();
     }
 

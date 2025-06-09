@@ -81,7 +81,7 @@
                     type="submit"
                     @if (empty($name) || empty($phone)) disabled @endif
                     name="action"
-                    value="continue"
+                    value="pay"
                     class="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
                     style="background-color: #2D5900;"
                 >

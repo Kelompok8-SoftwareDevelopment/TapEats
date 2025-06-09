@@ -14,6 +14,7 @@ use App\Livewire\Pages\PaymentFailurePage;
 use App\Livewire\Pages\PaymentSuccessPage;
 use App\Livewire\Pages\ScanPage;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 Route::get('/', function () {
     if (!session()->has('table_number')) {
@@ -23,18 +24,34 @@ Route::get('/', function () {
     return redirect()->route('home');
 });
 
-// Scan Page dan store result (tanpa middleware)
+// =====================
+// Webhook 
+// =====================
+Route::post('/payment/webhook', [TransactionController::class, 'handleWebhook'])->name('payment.webhook');
+
+// =====================
+// Public access (tanpa CheckTableNumber)
+// =====================
 Route::get('/scan', ScanPage::class)->name('product.scan');
 Route::post('/store-qr-result', [QRController::class, 'storeResult'])->name('product.scan.store');
 
-// Group dengan middleware jika sudah scan
+// QR Code
+Route::get('/{code}', [QRController::class, 'checkCode'])->name('product.scan.code');
+
+// =====================
+// Protected with CheckTableNumber middleware
+// =====================
 Route::middleware(CheckTableNumber::class)->group(function () {
-    Route::get('/home', HomePage::class)->name('home');
+    
+    // Halaman utama & makanan
+    Route::get('/', HomePage::class)->name('home');
+    Route::get('/home', HomePage::class);
     Route::get('/food', AllFoodPage::class)->name('product.index');
     Route::get('/food/favorite', FavoritePage::class)->name('product.favorite');
     Route::get('/food/promo', PromoPage::class)->name('product.promo');
     Route::get('/food/{id}', DetailPage::class)->name('product.detail');
 
+    // Pembayaran
     Route::get('/cart', CartPage::class)->name('payment.cart');
     Route::get('/checkout', CheckoutPage::class)->name('payment.checkout');
 
@@ -44,9 +61,3 @@ Route::middleware(CheckTableNumber::class)->group(function () {
     Route::get('/payment/success', PaymentSuccessPage::class)->name('payment.success');
     Route::get('/payment/failure', PaymentFailurePage::class)->name('payment.failure');
 });
-
-// Webhook
-Route::post('/payment/webhook', [TransactionController::class, 'handleWebhook'])->name('payment.webhook');
-
-// Optional QR code access via direct link
-Route::get('/{code}', [QRController::class, 'checkCode'])->name('product.scan.code');
