@@ -141,7 +141,7 @@ class TransactionController extends Controller
             'external_id' => $uuid,
             'amount' => $subTotal + $ppn,
             'description' => $description,
-            'invoice_duration' => 3600,
+            'invoice_duration' => 60,
             'currency' => 'IDR',
             'customer' => ['given_names' => $name, 'mobile_number' => $phone],
             'success_redirect_url' => route('payment.success'),
@@ -249,7 +249,7 @@ class TransactionController extends Controller
             $data = $request->all();
             $external_id = $data['external_id'];
             $status = $data['status'];
-            $payment_method = $data['payment_method'];
+            $payment_method = isset($data['payment_method']) ? $data['payment_method'] : null;
             Log::info('Webhook data extracted - external_id: ' . $external_id . ', status: ' . $status . ', payment_method: ' . $payment_method);
 
             if(! $external_id || ! $status){
