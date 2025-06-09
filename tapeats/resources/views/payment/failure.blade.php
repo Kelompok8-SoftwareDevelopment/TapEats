@@ -10,6 +10,7 @@
             <p class="mt-2 text-sm font-medium text-black-50">
                 Harap coba kembali
             </p>
+
             <a
                 href="/cart"
                 wire:navigate
@@ -19,4 +20,20 @@
             </a>
         </div>
     </div>
+
+    {{-- SweetAlert for error feedback --}}
+    @if (session('debug'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Transaksi Gagal',
+                    text: "{{ session('debug') }}",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#2D5900'
+                });
+            });
+        </script>
+    @endif
 </x-layouts.app>
