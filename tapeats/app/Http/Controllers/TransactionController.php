@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use Xendit\Configuration;
 use Xendit\Invoice\CreateInvoiceRequest;
@@ -302,4 +303,22 @@ class TransactionController extends Controller
         Session::save();
         Log::info('Session cleared, removed keys: ' . json_encode($keys));
     }
+
+    public function items()
+{
+    return $this->hasMany(TransactionItem::class);
+}
+
+public function food()
+{
+    return $this->belongsTo(Food::class, 'foods_id');
+}
+
+public function download($id)
+{
+    $transaction = Transaction::with('items.food')->findOrFail($id);
+
+    $pdf = Pdf::loadView('payment.receipt-pdf', compact('transaction'));
+    return $pdf->download('receipt-'.$transaction->code.'.pdf');
+}
 }

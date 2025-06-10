@@ -55,3 +55,6 @@ Route::controller(QRController::class)->group(function (){
     Route::get('/scan', ScanPage::class)->name('product.scan');
     Route::get('/{tableNumber}', 'checkCode')->name('product.scan.table');
 });
+
+Route::get('/transactions/{id}/download', [TransactionController::class, 'download'])->name('transactions.download');
+
