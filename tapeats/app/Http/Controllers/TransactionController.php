@@ -111,8 +111,14 @@ class TransactionController extends Controller
             return response()->json(['success' => false, 'message' => 'Data is empty'], 400);
         }
 
-        $barcodesId = 99;
-        Log::info('Using hardcoded barcodes_id: ' . $barcodesId);
+        $barcode = Barcodes::where('table_number', $tableNumber)->first();
+
+        if (!$barcode) {
+            Log::warning("Barcode dengan nomor meja {$tableNumber} tidak ditemukan.");
+            return redirect()->route('payment.failure')->with('debug', "Nomor meja {$tableNumber} tidak terdaftar.");
+        }
+
+        $barcodesId = $barcode->id;
 
         $transactionCode = 'TRX_' . mt_rand(100000, 999999);
         Log::info('Generated transaction code: ' . $transactionCode);
