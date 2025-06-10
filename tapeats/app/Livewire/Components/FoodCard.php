@@ -3,6 +3,7 @@
 namespace App\Livewire\Components;
 
 use Livewire\Component;
+use App\Models\TransactionItems;
 
 class FoodCard extends Component
 {
@@ -14,6 +15,21 @@ class FoodCard extends Component
     public function mount()
     {
         $this->matchedCategory = collect($this->categories)->firstWhere('id', $this->data->categories_id);
+
+        // Hitung total sold dari transaksi yang sudah PAID
+        $this->data->total_sold = $this->calculateTotalSold();
+    }
+
+    /**
+     * Menghitung total item yang terjual dari transaksi yang sudah PAID
+     */
+    private function calculateTotalSold()
+    {
+        return TransactionItems::where('foods_id', $this->data->id)
+            ->whereHas('transaction', function ($query) {
+                $query->where('payment_status', 'PAID');
+            })
+            ->sum('quantity') ?? 0;
     }
 
     public function showDetails()
@@ -47,7 +63,8 @@ class FoodCard extends Component
         session(['cart_items' => $cartItems]);
         session(['has_unpaid_transaction' => false]);
 
-        $this->dispatch('toast',
+        $this->dispatch(
+            'toast',
             data: [
                 'message1' => 'Item added to cart',
                 'message2' => $this->data->name,

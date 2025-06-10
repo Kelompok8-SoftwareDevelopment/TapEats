@@ -133,21 +133,14 @@ class TransactionResource extends Resource
                 Tables\Filters\SelectFilter::make('payment_method')
                     ->label('Payment Method')
                     ->options([
-                        'CASH' => 'Cash',
-                        'QRIS' => 'QRIS',
-                        'EWALLET_DANA' => 'DANA',
-                        'EWALLET_OVO' => 'OVO',
-                        'EWALLET_LINKAJA' => 'LinkAja',
-                        'EWALLET_SHOPEEPAY' => 'ShopeePay',
-                        'BANK_BCA' => 'Bank Transfer - BCA',
-                        'BANK_BNI' => 'Bank Transfer - BNI',
-                        'BANK_MANDIRI' => 'Bank Transfer - Mandiri',
-                        'BANK_BRI' => 'Bank Transfer - BRI',
-                        'BANK_PERMATA' => 'Bank Transfer - Permata',
-                        'VIRTUAL_ACCOUNT' => 'Virtual Account (VA)',
-                        'RETAIL_ALFAMART' => 'Alfamart',
-                        'RETAIL_INDOMARET' => 'Indomaret',
-                        'CARD' => 'Credit/Debit Card',
+                        'BANK_TRANSFER' => 'Bank Transfer',
+                        'QR_CODE' => 'QR Code',
+                        'CREDIT_CARD' => 'Credit Card',
+                        'DIRECT_DEBIT' => 'Debit Card',
+                        'EWALLET' => 'E-Wallet',
+                        'PAYLATER' => 'PayLater',
+                        'RETAIL_OUTLET' => 'Retail Outlet',
+                        'PENDING' => 'Pending',
                     ])
                     ->searchable(),
 
