@@ -27,9 +27,15 @@ class DashboardStats extends BaseWidget
         $totalFoods = Foods::count();
         $totalBarcodes = Barcodes::count();
 
-        // Filter transactions & items nya by date
-        $filteredTransactions = Transaction::query();
-        $filteredItems = TransactionItems::query();
+        // Filter transactions & items nya by date yang PAID
+        $filteredTransactions = Transaction::query()
+            ->where('payment_status', 'PAID');
+
+        // Filter transaction items untuk transaksi yang PAID
+        $filteredItems = TransactionItems::query()
+            ->whereHas('transaction', function ($query) {
+                $query->where('payment_status', 'PAID');
+            });
 
         if ($startDate) {
             $filteredTransactions->where('created_at', '>=', $startDate);

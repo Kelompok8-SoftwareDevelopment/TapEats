@@ -18,21 +18,25 @@ class SalesChart extends ChartWidget
         $startDate = isset($this->filters['startDate']) ? Carbon::parse($this->filters['startDate'])->startOfDay() : now()->startOfMonth();
         $endDate = isset($this->filters['endDate']) ? Carbon::parse($this->filters['endDate'])->endOfDay() : now();
 
-
         $period = \Carbon\CarbonPeriod::create($startDate, $endDate);
         $labels = [];
         $data = [];
 
         foreach ($period as $date) {
             $labels[] = $date->format('d M'); // e.g. "01 Jan"
-            $data[] = TransactionItems::whereDate('created_at', $date)->sum('subtotal');
-        }
 
+            // Filter hanya transaksi dengan status PAID
+            $data[] = TransactionItems::whereDate('created_at', $date)
+                ->whereHas('transaction', function ($query) {
+                    $query->where('payment_status', 'PAID');
+                })
+                ->sum('subtotal');
+        }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Total Penjualan',
+                    'label' => 'Total Penjualan (Rp)',
                     'data' => $data,
                     'backgroundColor' => '#3b82f6',
                     'borderColor' => '#3b82f6',
@@ -43,19 +47,25 @@ class SalesChart extends ChartWidget
         ];
     }
 
-
-    // protected function getFilters(): ?array
-    // {
-    //     return [
-    //         'year' => 'This year',
-    //         'week' => 'Last week',
-    //         'month' => 'Last month',
-
-    //     ];
-    // }
-
     protected function getType(): string
     {
         return 'line';
+    }
+    protected function getOptions(): array
+    {
+        return [
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'min' => 0,
+
+                ],
+            ],
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                ],
+            ],
+        ];
     }
 }

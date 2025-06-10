@@ -11,8 +11,10 @@
         "filament/filament": "^3.2",
         "laravel/framework": "^12.13.0",
         "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "livewire/livewire": "^3.5",
         "maatwebsite/excel": "^3.1",
+        "quix-labs/laravel-supabase-flysystem": "^1.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "xendit/xendit-php": "^6.0"
     },

@@ -62,12 +62,13 @@ return [
 
         'supabase' => [
             'driver' => 's3',
-            'key' => env('SUPABASE_KEY'),
-            'secret' => env('SUPABASE_KEY'), // Supabase pakai key yang sama untuk key & secret
-            'region' => 'us-east-1',
+            'key' => env('SUPABASE_SERVICE_ROLE_KEY'), // Gunakan service role key untuk upload
+            'secret' => env('SUPABASE_SERVICE_ROLE_KEY'), // Sama dengan key
+            'region' => env('SUPABASE_REGION', 'ap-southeast-1'),
             'bucket' => env('SUPABASE_BUCKET'),
-            'endpoint' => env('SUPABASE_URL') . '/storage/v1/s3',
+            'endpoint' => env('SUPABASE_ENDPOINT'),
             'use_path_style_endpoint' => true,
+            'throw' => false,
             'visibility' => 'public',
         ],
 

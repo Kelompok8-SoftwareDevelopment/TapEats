@@ -23,9 +23,12 @@ class TopSellingMenu extends BaseWidget
             ->query(
                 TransactionItems::query()
                     ->select('foods_id', DB::raw('SUM(quantity) as total_quantity'))
+                    ->whereHas('transaction', function ($query) {
+                        $query->where('payment_status', 'PAID');
+                    })
                     ->groupBy('foods_id')
                     ->orderByDesc('total_quantity')
-                    ->with('food') // pastikan relasi ini ada di model TransactionItems
+                    ->with('food')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('food.name')
