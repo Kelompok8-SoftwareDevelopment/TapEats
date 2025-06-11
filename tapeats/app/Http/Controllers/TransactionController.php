@@ -45,20 +45,50 @@ class TransactionController extends Controller
                 $externalId = session('external_id');
                 $tx = Transaction::where('external_id', $externalId)->first();
 
-                if ($tx && $tx->payment_status === 'PENDING') {
-                    Log::info("Masih PENDING, redirect ke checkout_link lama: {$tx->checkout_link}");
-                    return redirect($tx->checkout_link);
+                if ($tx) {
+                    // Cek status real-time dari Xendit
+                    $realStatus = $this->checkInvoiceStatus($externalId);
+                    
+                    if ($realStatus) {
+                        // Update status di database
+                        $tx->payment_status = $realStatus;
+                        $tx->save();
+                        
+                        // Jika masih PENDING, redirect ke checkout link
+                        if ($realStatus === 'PENDING') {
+                            Log::info("Masih PENDING, redirect ke checkout_link: {$tx->checkout_link}");
+                            return redirect($tx->checkout_link);
+                        }
+                        
+                        // Jika EXPIRED atau PAID, clear session dan handle accordingly
+                        if (in_array($realStatus, ['EXPIRED', 'PAID'])) {
+                            $this->clearSession();
+                            Log::info("Status {$realStatus}, session cleared");
+                            
+                            if ($realStatus === 'EXPIRED') {
+                                // Kembalikan stock jika expired
+                                $this->restoreStock($tx->id);
+                                Log::info("Stock restored for expired transaction: {$tx->id}");
+                            }
+                            
+                            if ($realStatus === 'PAID') {
+                                $this->clearSession(true); // Clear semua termasuk payment_token
+                                return redirect()->route('payment.success');
+                            }
+                        }
+                    } else {
+                        // Jika tidak bisa cek status, clear session untuk safety
+                        $this->clearSession();
+                        Log::warning("Cannot check invoice status, clearing session for safety");
+                    }
+                } else {
+                    // Transaksi tidak ditemukan, clear session
+                    $this->clearSession();
+                    Log::warning("Transaction not found for external_id: {$externalId}, clearing session");
                 }
-
-                // Kalau sudah PAID atau EXPIRED, clear session agar bisa buat invoice baru
-                session()->forget([
-                    'has_unpaid_transaction',
-                    'external_id',
-                    'checkout_link',
-                ]);
-                Log::info('Session setelah clear (expired/paid):', session()->all());
             }
-            // Tidak ada pending, lanjut bikin invoice baru
+            
+            // Lanjut bikin invoice baru
             return $this->processPayment($request);
         }
 
@@ -72,9 +102,28 @@ class TransactionController extends Controller
             }
 
             $transaction = Transaction::where('external_id', $externalId)->first();
-            if (! $transaction) {
+            if (!$transaction) {
                 Log::warning("Transaction dengan external_id {$externalId} tidak ditemukan");
+                $this->clearSession();
                 return view('payment.failure');
+            }
+
+            // Cek status real-time sebelum redirect
+            $realStatus = $this->checkInvoiceStatus($externalId);
+            if ($realStatus && $realStatus !== 'PENDING') {
+                $transaction->payment_status = $realStatus;
+                $transaction->save();
+                
+                if ($realStatus === 'EXPIRED') {
+                    $this->restoreStock($transaction->id);
+                    $this->clearSession();
+                    return view('payment.failure')->with('message', 'Transaksi sudah expired');
+                }
+                
+                if ($realStatus === 'PAID') {
+                    $this->clearSession(true); // Clear semua termasuk payment_token
+                    return redirect()->route('payment.success');
+                }
             }
 
             return redirect($transaction->checkout_link);
@@ -82,6 +131,37 @@ class TransactionController extends Controller
 
         Log::warning('Invalid action: ' . $action);
         abort(400, 'Invalid action.');
+    }
+
+    private function checkInvoiceStatus($externalId)
+    {
+        try {
+            $result = $this->apiInstance->getInvoices(null, $externalId);
+            if (!empty($result) && isset($result[0]['status'])) {
+                return $result[0]['status'];
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to check invoice status: ' . $e->getMessage());
+        }
+        return null;
+    }
+
+    private function restoreStock($transactionId)
+    {
+        try {
+            $items = TransactionItems::where('transaction_id', $transactionId)->get();
+            
+            foreach ($items as $item) {
+                $food = Foods::find($item->foods_id);
+                if ($food) {
+                    $food->stock += $item->quantity;
+                    $food->save();
+                    Log::info("Stock restored for {$food->name}, quantity: {$item->quantity}");
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to restore stock: ' . $e->getMessage());
+        }
     }
 
     public function processPayment(Request $request)
@@ -188,7 +268,6 @@ class TransactionController extends Controller
                 $food->save();
             }
 
-
             $transaction = new Transaction();
             $transaction->checkout_link = $checkoutLink;
             $transaction->payment_method = "PENDING";
@@ -216,8 +295,12 @@ class TransactionController extends Controller
             }
             Log::info('Transaction items created for transaction: ' . $transaction->id);
 
-            session(['external_id' => $uuid]);
-            session(['has_unpaid_transaction' => true]);
+            // Set session untuk tracking
+            session([
+                'external_id' => $uuid,
+                'has_unpaid_transaction' => true,
+                'checkout_link' => $checkoutLink
+            ]);
             Log::info('Session updated with external_id: ' . $uuid);
 
             return redirect($checkoutLink);
@@ -238,23 +321,36 @@ class TransactionController extends Controller
             Log::info('Transaction found, id: ' . $transaction->id);
 
             if ($transaction->payment_status === 'SETTLED') {
-                $this->clearSession();
+                $this->clearSession(true); // Clear semua termasuk payment_token
                 Log::info('Payment settled, clearing session');
                 return response()->json(['success' => true, 'message' => 'Pembayaran anda telah berhasil diproses']);
             }
 
-            $transaction->payment_status = $result[0]['status'];
+            $newStatus = $result[0]['status'];
+            $transaction->payment_status = $newStatus;
             $transaction->payment_method = $result[0]['payment_method'];
             $transaction->save();
             Log::info('Transaction updated, new status: ' . $transaction->payment_status);
 
-            $this->clearSession();
-            Log::info('Session cleared after update');
+            // Clear session jika status final
+            if (in_array($newStatus, ['PAID', 'SETTLED', 'EXPIRED'])) {
+                if ($newStatus === 'EXPIRED') {
+                    $this->restoreStock($transaction->id);
+                }
+                
+                if (in_array($newStatus, ['PAID', 'SETTLED'])) {
+                    $this->clearSession(true); // Clear semua untuk payment success
+                } else {
+                    $this->clearSession(); // Hanya clear transaction data untuk expired
+                }
+                
+                Log::info('Session cleared after status update to: ' . $newStatus);
+            }
 
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'status' => $newStatus]);
         } catch (\Exception $e) {
             Log::error('Failed to get invoice', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return view('payment.failure');
+            return response()->json(['success' => false, 'message' => 'Failed to get payment status'], 500);
         }
     }
 
@@ -277,9 +373,9 @@ class TransactionController extends Controller
             $payment_method = isset($data['payment_method']) ? $data['payment_method'] : null;
             Log::info('Webhook data extracted - external_id: ' . $external_id . ', status: ' . $status . ', payment_method: ' . $payment_method);
 
-            if (! $external_id || ! $status) {
+            if (!$external_id || !$status) {
                 Log::warning('Invalid webhook payload: missing external_id or status');
-                return response()->json(['message' => 'Invalid paylod'], 400);
+                return response()->json(['message' => 'Invalid payload'], 400);
             }
 
             $transaction = Transaction::where('external_id', $external_id)->first();
@@ -295,30 +391,11 @@ class TransactionController extends Controller
             $transaction->save();
             Log::info('Transaction updated, id: ' . $transaction->id . ', new status: ' . $status);
 
+            // Jika status expired balikin stock ke database
             if ($status === 'EXPIRED') {
-                $items = TransactionItems::where('transaction_id', $transaction->id)->get();
-
-                foreach ($items as $item) {
-                    $food = Foods::find($item->foods_id);
-                    if ($food) {
-                        $food->stock += $item->quantity;
-                        $food->save();
-                        Log::info("Stok dikembalikan untuk {$food->name}, jumlah: {$item->quantity}");
-                    }
-                }
+                $this->restoreStock($transaction->id);
+                Log::info("Stock restored for expired transaction: {$transaction->id}");
             }
-
-            if (in_array($status, ['PAID', 'EXPIRED'], true)) {
-                session()->forget([
-                    'has_unpaid_transaction',
-                    'external_id',
-                    'checkout_link',
-                ]);
-                Log::info("Session cleared after webhook for status: {$status}");
-            }
-
-            // $this->clearSession();
-            // Log::info('Session cleared after webhook');
 
             return response()->json([
                 'code' => 200,
@@ -332,14 +409,22 @@ class TransactionController extends Controller
         }
     }
 
-    public function clearSession()
+    public function clearSession($clearAll = false)
     {
-        $keys = ['name', 'external_id', 'has_unpaid_transaction', 'cart_items', 'payment_token'];
+        if ($clearAll) {
+            // Clear semua termasuk payment_token (ketika user benar-benar selesai atau keluar)
+            $keys = ['name', 'phone', 'external_id', 'has_unpaid_transaction', 'cart_items', 'payment_token', 'checkout_link'];
+        } else {
+            // Clear hanya transaction-related session, keep payment_token untuk transaksi selanjutnya
+            $keys = ['external_id', 'has_unpaid_transaction', 'checkout_link'];
+        }
+        
         Session::forget($keys);
         Session::save();
         Log::info('Session cleared, removed keys: ' . json_encode($keys));
     }
 
+<<<<<<< Updated upstream
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
@@ -358,3 +443,35 @@ class TransactionController extends Controller
         return $pdf->download('receipt-' . $transaction->code . '.pdf');
     }
 }
+=======
+    // Method baru untuk handle payment failure
+    public function paymentFailure()
+    {
+        Log::info('Payment failure page accessed');
+        
+        // Clear session saat user sampai di failure page
+        if (session()->has('has_unpaid_transaction')) {
+            $externalId = session('external_id');
+            if ($externalId) {
+                // Cek apakah transaksi masih ada dan expired
+                $transaction = Transaction::where('external_id', $externalId)->first();
+                if ($transaction && $transaction->payment_status === 'PENDING') {
+                    // Cek status real-time
+                    $realStatus = $this->checkInvoiceStatus($externalId);
+                    if ($realStatus === 'EXPIRED') {
+                        $transaction->payment_status = 'EXPIRED';
+                        $transaction->save();
+                        $this->restoreStock($transaction->id);
+                        Log::info("Transaction marked as expired and stock restored: {$transaction->id}");
+                    }
+                }
+            }
+            
+            $this->clearSession(); // Hanya clear transaction data, keep payment_token
+            Log::info('Session cleared on payment failure page');
+        }
+        
+        return view('payment.failure');
+    }
+}
+>>>>>>> Stashed changes

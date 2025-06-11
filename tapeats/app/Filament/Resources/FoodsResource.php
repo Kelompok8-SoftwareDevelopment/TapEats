@@ -16,6 +16,7 @@ use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Livewire\Attributes\Reactive;
+use Filament\Tables\Actions\Action;
 
 class FoodsResource extends Resource
 {
@@ -99,6 +100,14 @@ class FoodsResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                Action::make('Refresh')
+                    ->label('Refresh')
+                    ->icon('heroicon-o-arrow-path')
+                    ->action(function ($livewire) {
+                    $livewire->resetTable();
+                })
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
