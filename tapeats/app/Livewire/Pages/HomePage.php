@@ -24,8 +24,8 @@ class HomePage extends Component
     public function mount(Foods $foods)
     {
         $this->categories = Category::all();
-        $this->promos = $foods->getPromo();
-        $this->favorites = $foods->getFavoriteFood();
+        $this->loadPromos();
+        $this->loadFavorites();
         $this->tableNumber = session('table_number');
 
         $name = session('name');
@@ -33,6 +33,24 @@ class HomePage extends Component
 
         if ($name && $phone) {
             $this->isCustomerDataComplete = false;
+        }
+    }
+
+    public function loadFavorites()
+    {
+        $this->favorites = (new Foods)->getFavoriteFood();
+    }
+
+    public function loadPromos()
+    {
+        $this->promos = (new Foods)->getPromo();
+    }
+
+    public function updatedTerm($value)
+    {
+        if (trim($value) === '') {
+            $this->loadFavorites();
+            $this->loadPromos();
         }
     }
 

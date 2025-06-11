@@ -33,7 +33,8 @@
                     class="mb-3 text-center text-xl font-semibold text-white">
                     What do You Want to Eat?
                 </h2>
-                <form class="flex overflow-hidden rounded-full" method="GET">
+                <!-- <form class="flex overflow-hidden rounded-full" method="GET"> -->
+                <form wire:submit.prevent class="flex overflow-hidden rounded-full">
                     <input
                         type="search"
                         class="h-12 w-full appearance-none rounded-full px-4 placeholder:font-semibold placeholder:text-black-30"
