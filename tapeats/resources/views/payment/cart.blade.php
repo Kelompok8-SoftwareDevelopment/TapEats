@@ -21,21 +21,26 @@
                 <button
                     x-on:click="open = true"
                     :disabled="{{ count($selectedItems) < 1 ? 'true' : 'false' }}"
-                    class="flex items-center gap-2 rounded-full px-6 py-3 font-semibold {{ count($selectedItems) < 1 
-                        ? 'bg-primary-10 text-primary-50 opacity-50 cursor-not-allowed' 
-                        : 'bg-primary-10 text-primary-50' }}">
+                    class="flex items-center gap-2 rounded-full px-6 py-3 font-semibold
+                    {{ count($selectedItems) < 1 
+                        ? 'bg-[#b7e4c7] text-[#2D5900] opacity-50 cursor-not-allowed' 
+                        : 'bg-[#b7e4c7] text-[#2D5900]' }}"
+                >
                     Delete ({{ count($selectedItems) }})
                 </button>
 
                 <button
                     wire:click="checkout"
-                    class="flex items-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10">
+                    class="flex items-center gap-2 rounded-full bg-[#2D5900] px-6 py-3 font-semibold text-white"
+                >
                     <span>Order Now</span>
                     <img
                         src="{{ asset('assets/icons/arrow-right-white-icon.svg') }}"
-                        alt="Cart" />
+                        alt="Cart"
+                    />
                 </button>
             </div>
+
         @else
             <div>
                 <img

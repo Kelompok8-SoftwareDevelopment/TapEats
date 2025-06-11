@@ -6,17 +6,17 @@
             class="w-full overflow-hidden rounded-3xl"
         />
         <div class="mt-4 w-full text-center">
-            <p class="text-lg font-semibold text-black-80">Transaksi Gagal</p>
+            <p class="text-lg font-semibold text-black-80">Transaction Failed</p>
             <p class="mt-2 text-sm font-medium text-black-50">
-                Harap coba kembali
+                Please try again
             </p>
 
             <a
                 href="/cart"
                 wire:navigate
-                class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
+                class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#2D5900] px-6 py-3 font-semibold text-white"
             >
-                Kembali ke Keranjang
+                Return to Cart
             </a>
         </div>
     </div>

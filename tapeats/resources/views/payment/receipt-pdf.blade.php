@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Struk Pembayaran</title>
+    <title>Order Receipt</title>
     <style>
         body {
             font-family: monospace;
@@ -49,7 +49,6 @@
 <body>
     <div class="container">
         <div class="text-center">
-            <img src="{{ public_path('assets/icons/store-icon.svg') }}" alt="Logo Toko" class="logo">
             <h1 class="text-xl font-bold mt-2">OLLIES</h1>
             <p class="text-xs">Jl. Dummy Address No.123, Kota Contoh</p>
             <p class="text-xs">Telp: 081234567890</p>
@@ -95,7 +94,7 @@
 
         <div class="text-center mt-4">
             <p>Enjoy Your Food</p>
-            <p class="text-xs mt-1">Kritik & Saran: https://ollies.test/feedback</p>
+            <p class="text-xs mt-1">Feedback: https://ollies.test/feedback</p>
         </div>
     </div>
 </body>

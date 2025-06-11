@@ -7,17 +7,17 @@
         />
         <div class="mt-4 w-full text-center">
             <p class="text-lg font-semibold text-black-80">
-                Kode QR tidak valid
+                Invalid QR Code
             </p>
             <p class="mt-2 text-sm font-medium text-black-50">
-                Ingin memindai ulang?
+                Would You Like to Scan Again?
             </p>
             <a
                 href="/scan"
                 wire:navigate
                 class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
             >
-                Pindai Ulang
+                Scan Again
             </a>
         </div>
     </div>

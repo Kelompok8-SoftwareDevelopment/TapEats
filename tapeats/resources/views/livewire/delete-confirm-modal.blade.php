@@ -6,8 +6,7 @@
                 alt="Warning"
             />
             <p class="my-4 text-center text-2xl font-semibold text-black-80">
-                Kamu yakin ingin menghapus makanan?
-            </p>
+                "Are you sure you want to remove this item?"            </p>
         </div>
         <div class="flex items-center justify-between gap-4">
             <button

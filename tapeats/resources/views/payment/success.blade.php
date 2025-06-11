@@ -12,10 +12,10 @@
             <hr class="my-3 border-dashed">
 
             <div class="text-xs">
-                <p>Tanggal: {{ $transaction->created_at->format('Y-m-d') }}</p>
-                <p>Waktu: {{ $transaction->created_at->format('H:i:s') }}</p>
-                <p>Kode Transaksi: {{ $transaction->code }}</p>
-                <p>No. Meja: {{ $transaction->barcodes_id }}</p>
+                <p>Date: {{ $transaction->created_at->format('Y-m-d') }}</p>
+                <p>Time: {{ $transaction->created_at->format('H:i:s') }}</p>
+                <p>Transaction Code: {{ $transaction->code }}</p>
+                <p>Table Number: {{ $transaction->barcodes_id }}</p>
             </div>
 
             <hr class="my-3 border-dashed">
@@ -42,12 +42,12 @@
             <p>Total QTY: {{ $totalQty }}</p>
             <p>Sub Total: Rp {{ number_format($transaction->total, 0, ',', '.') }}</p>
             <p class="font-bold">Total: Rp {{ number_format($transaction->total, 0, ',', '.') }}</p>
-            <p>Bayar (Cash): Rp {{ number_format($transaction->total, 0, ',', '.') }}</p>
-            <p>Kembali: Rp 0</p>
+            <p>Payment (Cash): Rp {{ number_format($transaction->total, 0, ',', '.') }}</p>
+            <p>Back: Rp 0</p>
 
             <div class="text-center mt-4">
-                <p>Terima kasih telah berbelanja</p>
-                <p class="text-xs mt-1">Kritik & Saran: https://ollies.test/feedback</p>
+                <p>Thank You for Order</p>
+                <p class="text-xs mt-1">Feedback: https://ollies.test/feedback</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                 wire:navigate
                 class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
             >
-                Kembali ke Menu
+                Back to Menu
             </a>
 
             <form action="{{ route('transactions.download', $transaction->id) }}" method="GET">

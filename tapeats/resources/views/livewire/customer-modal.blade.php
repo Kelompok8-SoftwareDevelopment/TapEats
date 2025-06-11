@@ -4,7 +4,7 @@
             <div class="mb-6 mt-4 space-y-4">
                 <div class="flex flex-col space-y-1">
                     <label class="text-xs font-semibold text-black-50" for="name">
-                        Nama Pemesan
+                        Name
                     </label>
                     <input
                         class="{{ $errors->has('name') ? 'border-red-500' : 'border-black-30' }} rounded-lg border px-2 py-1.5"
@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex flex-col space-y-1">
                     <label class="text-xs font-semibold text-black-50" for="phone">
-                        Nomor Handphone
+                        Phone Number
                     </label>
                     <input
                         class="{{ $errors->has('phone') ? 'border-red-500' : 'border-black-30' }} rounded-lg border px-2 py-1.5"

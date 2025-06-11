@@ -20,8 +20,13 @@
                     src="{{ asset('assets/icons/spoon-icon.svg') }}"
                     alt="Sold"
                 />
+<<<<<<< Updated upstream
                 <span class="text-sm font-semibold">{{ $food->total_sold ?? 0 }} Terjual</span>
             </div> -->
+=======
+                <span class="text-sm font-semibold">{{ $food->total_sold ?? 0 }} Sold</span>
+            </div>
+>>>>>>> Stashed changes
             <div
                 class="{{ $food->percent ? 'block' : 'invisible' }} relative flex items-center justify-center gap-1.5 rounded-full bg-cover px-2 py-1.5"
             >

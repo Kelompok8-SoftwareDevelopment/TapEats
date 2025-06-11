@@ -128,7 +128,7 @@ class FoodsResource extends Resource
                 Tables\Columns\TextColumn::make('is_promo')
                     ->sortable()
                     ->formatStateUsing(fn($state) => $state ? 'Yes' : 'No'),
-                Tables\Columns\TextColumn::make('categories.name')
+                Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()
                     ->searchable(),

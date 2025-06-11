@@ -1,12 +1,12 @@
 <x-layouts.app>
     <div class="grid min-h-screen place-content-center bg-white font-poppins px-6 py-12">
         <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-6">
-            <h2 class="text-2xl font-bold mb-4 text-center">Pesanan Sebelumnya</h2>
+            <h2 class="text-2xl font-bold mb-4 text-center">Previous Order</h2>
 
             <div class="mb-4 text-sm text-black-70">
-                <p><strong>Nama:</strong> {{ session('retry_name') }}</p>
-                <p><strong>No. Telepon:</strong> {{ session('retry_phone') }}</p>
-                <p><strong>Nomor Meja:</strong> {{ session('retry_table') }}</p>
+                <p><strong>Name:</strong> {{ session('retry_name') }}</p>
+                <p><strong>Phone Number:</strong> {{ session('retry_phone') }}</p>
+                <p><strong>Table Number:</strong> {{ session('retry_table') }}</p>
             </div>
 
             <h3 class="text-base font-semibold mb-2">Pesanan:</h3>
@@ -22,8 +22,8 @@
             <form method="POST" action="{{ route('payment.confirm') }}">
                 @csrf
                 <button type="submit"
-                    class="w-full bg-primary-50 hover:bg-primary-60 text-white font-semibold py-3 px-6 rounded-full">
-                    Bayar Ulang
+                    class="w-full bg-[#2D5900] hover:opacity-90 text-white font-semibold py-3 px-6 rounded-full">
+                    Retry Payment
                 </button>
             </form>
         </div>

@@ -1,4 +1,4 @@
-<div x-data="{ open: false }">
+<div x-data="{ open: false }" class="bg-white min-h-screen">
     <livewire:components.page-title-nav
         :title="'Favorite Food'"
         wire:key="{{ str()->random(50) }}"
