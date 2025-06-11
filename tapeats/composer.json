@@ -10,6 +10,7 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "filament/filament": "^3.2",
         "laravel/framework": "^12.13.0",
+        // "laravel/framework": "^12.00", // Coba Uncommand ini kalo struk error
         "laravel/tinker": "^2.9",
         "league/flysystem-aws-s3-v3": "^3.29",
         "livewire/livewire": "^3.5",

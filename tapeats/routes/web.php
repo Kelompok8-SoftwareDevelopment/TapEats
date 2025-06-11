@@ -30,7 +30,7 @@ Route::post('/store-qr-result', [QRController::class, 'storeResult'])->name('pro
 
 // Protected with CheckTableNumber middleware
 Route::middleware(CheckTableNumber::class)->group(function () {
-    
+
     // Halaman utama & makanan
     Route::get('/home', HomePage::class)->name('home');
     Route::get('/food', AllFoodPage::class)->name('product.index');
@@ -43,7 +43,7 @@ Route::middleware(CheckTableNumber::class)->group(function () {
     Route::get('/checkout', CheckoutPage::class)->name('payment.checkout');
 
     Route::middleware('throttle:10,1')->post('/payment', [TransactionController::class, 'handlePayment'])->name('payment');
-    Route::get('/payment', fn () => abort(404));
+    Route::get('/payment', fn() => abort(404));
     Route::get('/payment/status/{id}', [TransactionController::class, 'paymentStatus'])->name('payment.status');
     Route::get('/payment/success', PaymentSuccessPage::class)->name('payment.success');
     Route::get('/payment/failure', PaymentFailurePage::class)->name('payment.failure');
@@ -55,3 +55,12 @@ Route::post('/payment/webhook', [TransactionController::class, 'handleWebhook'])
 
 // QR Code via direct link
 Route::get('/{code}', [QRController::class, 'checkCode'])->name('product.scan.code');
+
+// Route::controller(QRController::class)->group(function (){
+//     Route::post('/store-qr-result', 'storeResult')->name('product.scan.store');
+//     // Scanner
+//     Route::get('/scan', ScanPage::class)->name('product.scan');
+//     Route::get('/{tableNumber}', 'checkCode')->name('product.scan.table');
+// });
+
+Route::get('/transactions/{id}/download', [TransactionController::class, 'download'])->name('transactions.download');

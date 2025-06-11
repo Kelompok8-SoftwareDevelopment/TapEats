@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "ec3ed1aba03446c196891314f12108ee",
+    // "content-hash": "304194093ef223c987238df39e15a23e", 
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2744,6 +2745,16 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/8729d084510480fdeec9b6ad198180147d4a7f06",
                 "reference": "8729d084510480fdeec9b6ad198180147d4a7f06",
+            // "version": "v12.18.0",
+            // "source": {
+            //     "type": "git",
+            //     "url": "https://github.com/laravel/framework.git",
+            //     "reference": "7d264a0dad2bfc5c154240b38e8ce9b2c4cdd14d"
+            // },
+            // "dist": {
+            //     "type": "zip",
+            //     "url": "https://api.github.com/repos/laravel/framework/zipball/7d264a0dad2bfc5c154240b38e8ce9b2c4cdd14d",
+            //     "reference": "7d264a0dad2bfc5c154240b38e8ce9b2c4cdd14d",
                 "shasum": ""
             },
             "require": {
