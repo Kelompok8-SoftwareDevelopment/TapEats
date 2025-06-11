@@ -164,8 +164,5 @@
             </div>
             @endif
             @endif
-            <div x-show="open">
-                <livewire:components.customer-modal />
-            </div>
     </main>
 </div>

@@ -46,18 +46,25 @@ class FoodCard extends Component
     {
         $cartItems = session('cart_items', []);
 
+        // ✅ Tambahkan baris ini untuk filter data rusak dari session
+        $cartItems = array_filter($cartItems, fn($item) => isset($item['id']));
+
+
         $existingItemIndex = collect($cartItems)->search(fn($item) => $item['id'] === $this->data->id);
 
         if ($existingItemIndex !== false) {
             $cartItems[$existingItemIndex]['quantity'] += 1;
         } else {
-            $cartItems[] = array_merge(
-                (array)$this->data,
-                [
-                    'quantity' => 1,
-                    'selected' => true,
-                ]
-            );
+            $cartItems[] = [
+                'id' => $this->data->id,
+                'name' => $this->data->name,
+                'price' => $this->data->price,
+                'price_afterdiscount' => $this->data->price_afterdiscount,
+                'image' => $this->data->image,
+                'is_promo' => $this->data->is_promo,
+                'quantity' => 1,
+                'selected' => true,
+            ];
         }
 
         session(['cart_items' => $cartItems]);

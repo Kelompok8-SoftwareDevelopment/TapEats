@@ -47,6 +47,10 @@ Route::middleware(CheckTableNumber::class)->group(function () {
     Route::get('/payment/status/{id}', [TransactionController::class, 'paymentStatus'])->name('payment.status');
     Route::get('/payment/success', PaymentSuccessPage::class)->name('payment.success');
     Route::get('/payment/failure', PaymentFailurePage::class)->name('payment.failure');
+    Route::get('/payment/retry', [TransactionController::class, 'showRetry'])->name('payment.retry');
+    Route::post('/payment/confirm', [TransactionController::class, 'retryPayment'])->name('payment.confirm');
+    Route::get('/payment/handle', [TransactionController::class, 'handlePayment'])->name('payment.handle');
+    Route::get('/payment/status/redirect/{id}', [TransactionController::class, 'handleStatusRedirect'])->name('payment.status.redirect');
 });
 
 // Webhook 

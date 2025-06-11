@@ -48,29 +48,38 @@ class TransactionController extends Controller
                 if ($tx) {
                     // Cek status real-time dari Xendit
                     $realStatus = $this->checkInvoiceStatus($externalId);
-                    
+
                     if ($realStatus) {
                         // Update status di database
                         $tx->payment_status = $realStatus;
                         $tx->save();
-                        
+
                         // Jika masih PENDING, redirect ke checkout link
                         if ($realStatus === 'PENDING') {
                             Log::info("Masih PENDING, redirect ke checkout_link: {$tx->checkout_link}");
                             return redirect($tx->checkout_link);
                         }
-                        
+
                         // Jika EXPIRED atau PAID, clear session dan handle accordingly
                         if (in_array($realStatus, ['EXPIRED', 'PAID'])) {
                             $this->clearSession();
                             Log::info("Status {$realStatus}, session cleared");
-                            
+
                             if ($realStatus === 'EXPIRED') {
-                                // Kembalikan stock jika expired
-                                $this->restoreStock($tx->id);
-                                Log::info("Stock restored for expired transaction: {$tx->id}");
+                                // Simpan ulang data ke session retry (untuk konfirmasi ulang)
+                                session([
+                                    'retry_cart' => session('cart_items'),
+                                    'retry_name' => session('name'),
+                                    'retry_phone' => session('phone'),
+                                    'retry_table' => session('table_number'),
+                                ]);
+
+                                $this->clearSession(); // Bersihkan sesi transaksi saja, bukan form
+
+                                Log::info("Transaction expired. Stock restored. Redirect to retry confirmation page.");
+                                return redirect()->route('payment.retry'); // Buat route & halaman ini nanti
                             }
-                            
+
                             if ($realStatus === 'PAID') {
                                 $this->clearSession(true); // Clear semua termasuk payment_token
                                 return redirect()->route('payment.success');
@@ -87,7 +96,7 @@ class TransactionController extends Controller
                     Log::warning("Transaction not found for external_id: {$externalId}, clearing session");
                 }
             }
-            
+
             // Lanjut bikin invoice baru
             return $this->processPayment($request);
         }
@@ -113,13 +122,12 @@ class TransactionController extends Controller
             if ($realStatus && $realStatus !== 'PENDING') {
                 $transaction->payment_status = $realStatus;
                 $transaction->save();
-                
+
                 if ($realStatus === 'EXPIRED') {
-                    $this->restoreStock($transaction->id);
                     $this->clearSession();
                     return view('payment.failure')->with('message', 'Transaksi sudah expired');
                 }
-                
+
                 if ($realStatus === 'PAID') {
                     $this->clearSession(true); // Clear semua termasuk payment_token
                     return redirect()->route('payment.success');
@@ -150,7 +158,7 @@ class TransactionController extends Controller
     {
         try {
             $items = TransactionItems::where('transaction_id', $transactionId)->get();
-            
+
             foreach ($items as $item) {
                 $food = Foods::find($item->foods_id);
                 if ($food) {
@@ -210,7 +218,7 @@ class TransactionController extends Controller
                 $price = isset($item['price_afterdiscount']) ? $item['price_afterdiscount'] : $item['price'];
                 $foodSubtotal = $price * $item['quantity'];
                 $subTotal += $foodSubtotal;
-                $category = Category::find($item['categories_id'])->name;
+                $category = Category::find($item['categories_id'] ?? null)?->name ?? 'Uncategorized';
                 $url = route('product.detail', ['id' => $item['id']]);
                 return ['name' => $item['name'], 'quantity' => $item['quantity'], 'price' => (int) $price, 'category' => $category, 'url' => $url];
             })->values()->toArray();
@@ -236,7 +244,7 @@ class TransactionController extends Controller
                 'currency' => 'IDR',
                 'customer' => ['given_names' => $name, 'mobile_number' => $phone],
                 'success_redirect_url' => route('payment.success'),
-                'failure_redirect_url' => route('payment.failure'),
+                'failure_redirect_url' => route('payment.status.redirect', ['id' => $uuid]),
                 'locale' => 'id',
                 'items' => $items,
                 'fees' => [['type' => 'PPN 11%', 'value' => $ppn]],
@@ -334,16 +342,13 @@ class TransactionController extends Controller
 
             // Clear session jika status final
             if (in_array($newStatus, ['PAID', 'SETTLED', 'EXPIRED'])) {
-                if ($newStatus === 'EXPIRED') {
-                    $this->restoreStock($transaction->id);
-                }
-                
+
                 if (in_array($newStatus, ['PAID', 'SETTLED'])) {
                     $this->clearSession(true); // Clear semua untuk payment success
                 } else {
                     $this->clearSession(); // Hanya clear transaction data untuk expired
                 }
-                
+
                 Log::info('Session cleared after status update to: ' . $newStatus);
             }
 
@@ -418,13 +423,12 @@ class TransactionController extends Controller
             // Clear hanya transaction-related session, keep payment_token untuk transaksi selanjutnya
             $keys = ['external_id', 'has_unpaid_transaction', 'checkout_link'];
         }
-        
+
         Session::forget($keys);
         Session::save();
         Log::info('Session cleared, removed keys: ' . json_encode($keys));
     }
 
-<<<<<<< Updated upstream
     public function items()
     {
         return $this->hasMany(TransactionItem::class);
@@ -442,13 +446,12 @@ class TransactionController extends Controller
         $pdf = Pdf::loadView('payment.receipt-pdf', compact('transaction'));
         return $pdf->download('receipt-' . $transaction->code . '.pdf');
     }
-}
-=======
+
     // Method baru untuk handle payment failure
     public function paymentFailure()
     {
         Log::info('Payment failure page accessed');
-        
+
         // Clear session saat user sampai di failure page
         if (session()->has('has_unpaid_transaction')) {
             $externalId = session('external_id');
@@ -461,17 +464,94 @@ class TransactionController extends Controller
                     if ($realStatus === 'EXPIRED') {
                         $transaction->payment_status = 'EXPIRED';
                         $transaction->save();
-                        $this->restoreStock($transaction->id);
                         Log::info("Transaction marked as expired and stock restored: {$transaction->id}");
                     }
                 }
             }
-            
+
             $this->clearSession(); // Hanya clear transaction data, keep payment_token
             Log::info('Session cleared on payment failure page');
         }
-        
+
         return view('payment.failure');
     }
+
+    public function retryPayment(Request $request)
+    {
+        // Isi ulang session seperti proses order awal
+        $retryCart = session('retry_cart');
+        $retryName = session('retry_name');
+        $retryPhone = session('retry_phone');
+        $retryTable = session('retry_table');
+
+        // Set ulang data ke session agar processPayment bisa berjalan normal
+        session([
+            'cart_items' => $retryCart,
+            'name' => $retryName,
+            'phone' => $retryPhone,
+            'table_number' => $retryTable,
+        ]);
+
+        // Tambahkan token untuk keamanan
+        $token = Str::random(32);
+        session(['payment_token' => $token]);
+
+        // Redirect ke handlePayment (action: pay)
+        return redirect()->route('payment.handle', [
+            'action' => 'pay',
+            'token' => $token
+        ]);
+    }
+
+    public function showRetry()
+    {
+        if (!session('retry_cart')) {
+            return redirect()->route('home')->with('message', 'Tidak ada transaksi untuk diulang.');
+        }
+
+        return view('payment.retry'); // Buat Blade view-nya
+    }
+
+    public function handleStatusRedirect($id)
+    {
+        Log::info("Redirected from Xendit after failure, ID: {$id}");
+
+        $transaction = Transaction::where('external_id', $id)->first();
+
+        if (!$transaction) {
+            Log::warning("Transaction not found after redirect.");
+            return redirect()->route('payment.failure')->with('debug', 'Transaksi tidak ditemukan.');
+        }
+
+        $status = $this->checkInvoiceStatus($id);
+
+        if ($status === 'EXPIRED') {
+            // Ambil ulang retry data dari transaksi
+            session([
+                'retry_cart' => $transaction->items->map(function ($item) {
+                    return [
+                        'id' => $item->foods_id,
+                        'name' => $item->food->name ?? 'N/A',
+                        'quantity' => $item->quantity,
+                        'price' => $item->price,
+                    ];
+                })->toArray(),
+                'retry_name' => $transaction->name,
+                'retry_phone' => $transaction->phone,
+                'retry_table' => $transaction->barcodes->table_number ?? null,
+            ]);
+
+            $this->clearSession();
+
+            return redirect()->route('payment.retry');
+        }
+
+        if ($status === 'PAID' || $status === 'SETTLED') {
+            $this->clearSession(true);
+            return redirect()->route('payment.success');
+        }
+
+        // Jika status masih PENDING atau gagal lainnya
+        return redirect()->route('payment.failure')->with('debug', "Status saat ini: {$status}");
+    }
 }
->>>>>>> Stashed changes

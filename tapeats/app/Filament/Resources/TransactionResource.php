@@ -85,6 +85,14 @@ class TransactionResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->headerActions([
+                Action::make('Refresh')
+                    ->label('Refresh')
+                    ->icon('heroicon-o-arrow-path')
+                    ->action(function ($livewire) {
+                        $livewire->resetTable();
+                    })
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->label('Transaction Code')
@@ -126,7 +134,6 @@ class TransactionResource extends Resource
                     ->label('Transaction Time')
                     ->dateTime()
                     ->sortable()
-
             ])
             ->filters([
                 // filter berdasarkan pembayaran
@@ -205,6 +212,12 @@ class TransactionResource extends Resource
             //
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->orderByDesc('created_at');
+    }
+
 
     public static function getPages(): array
     {
