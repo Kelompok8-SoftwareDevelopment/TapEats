@@ -34,13 +34,9 @@ class Foods extends Model
 
     public function getFavoriteFood()
     {
-        return TransactionItems::select(
-            'foods.*',
-            DB::raw('SUM(transaction_items.quantity) as total_sold')
-        )
-            ->join('foods', 'transaction_items.foods_id', '=', 'foods.id')
-            ->groupBy('foods.id')
-            ->orderByDesc('total_sold')
+        return self::with('category')
+            ->withSum('transactionItems as total_sold', 'quantity')
+            ->where('is_promo', 0)
             ->take(3)
             ->get();
     }

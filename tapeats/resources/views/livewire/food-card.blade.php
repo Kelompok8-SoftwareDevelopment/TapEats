@@ -15,12 +15,12 @@
 
     {{-- Gambar dan badge --}}
     <div class="relative w-full aspect-square rounded-xl overflow-hidden">
-        <div class="absolute left-1.5 top-1.5 z-10 flex items-center gap-1.5 rounded-full bg-white px-2 py-1.5">
+        <!-- <div class="absolute left-1.5 top-1.5 z-10 flex items-center gap-1.5 rounded-full bg-white px-2 py-1.5">
             <img src="{{ asset('assets/icons/spoon-icon.svg') }}" alt="Sold" />
             <span class="text-xs font-semibold text-black-100">
                 {{ $data->total_sold ?? 0 }} Terjual
             </span>
-        </div>
+        </div> -->
 
         @if ($data->is_promo)
         <div

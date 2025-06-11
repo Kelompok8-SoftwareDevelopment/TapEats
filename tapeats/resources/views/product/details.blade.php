@@ -13,7 +13,7 @@
         class="relative z-20 -mt-12 flex-grow overflow-hidden rounded-t-3xl p-4 font-poppins"
     >
         <div class="flex items-center justify-between">
-            <div
+            <!-- <div
                 class="flex w-fit items-center gap-1.5 rounded-full bg-[#b7e4c7] px-6 py-2 text-black-100"
             >
                 <img
@@ -21,7 +21,7 @@
                     alt="Sold"
                 />
                 <span class="text-sm font-semibold">{{ $food->total_sold ?? 0 }} Terjual</span>
-            </div>
+            </div> -->
             <div
                 class="{{ $food->percent ? 'block' : 'invisible' }} relative flex items-center justify-center gap-1.5 rounded-full bg-cover px-2 py-1.5"
             >

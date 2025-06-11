@@ -46,10 +46,6 @@ class FoodCard extends Component
     {
         $cartItems = session('cart_items', []);
 
-        // ✅ Tambahkan baris ini untuk filter data rusak dari session
-        $cartItems = array_filter($cartItems, fn($item) => isset($item['id']));
-
-
         $existingItemIndex = collect($cartItems)->search(fn($item) => $item['id'] === $this->data->id);
 
         if ($existingItemIndex !== false) {
