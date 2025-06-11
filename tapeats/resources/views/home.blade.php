@@ -120,12 +120,12 @@
                     <h3 class="text-xl font-semibold text-black-100">
                         Everyone's Favorite
                     </h3>
-                    <a
+                    <!-- <a
                         href="/food/favorite"
                         wire:navigate
                         class="block font-semibold text-[#2D5900]">
                         See More
-                    </a>
+                    </a> -->
                 </div>
                 <div
                     class="hide-scrollbar ml-4 flex items-stretch space-x-4 overflow-x-auto py-4">

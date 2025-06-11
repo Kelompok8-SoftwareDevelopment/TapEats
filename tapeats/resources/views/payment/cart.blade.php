@@ -15,7 +15,7 @@
         @if (!empty($validCartItems) && count($validCartItems) > 0)
             <livewire:components.menu-item-list
                 :items="$validCartItems"
-                wire:key="'menu-item-list'" />
+                wire:key="{{ str()->random(50) }}" />
 
             <div class="mt-6 flex items-center justify-between">
                 <button

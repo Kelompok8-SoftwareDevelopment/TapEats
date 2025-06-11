@@ -115,8 +115,7 @@ class FoodsResource extends Resource
                     ->sortable()
                     ->limit(20)
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\ImageColumn::make('image'),
-
+                // Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('price')
                     ->money('IDR')
                     ->sortable(),
