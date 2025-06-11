@@ -23,7 +23,7 @@
                     <span class="tex-sm block font-semibold">Table Number</span>
                     <a
                         href="/"
-                        class="mt-1.5 block cursor-pointer text-3xl font-bold">
+                        class="mt-1.5 block cursor-pointer text-3xl font-bold" wire:navigate>
                         {{ $tableNumber ?? "" }}
                     </a>
                 </div>
@@ -71,7 +71,7 @@
                     <a
                         href="/food/promo"
                         wire:navigate
-                        class="block font-semibold text-[#2D5900]">
+                        class="block font-semibold text-[#2D5900]" wire:navigate>
                         See More
                     </a>
                 </div>

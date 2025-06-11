@@ -54,6 +54,7 @@
         <div class="max-w-md mx-auto mt-6 px-6 space-y-3 mb-10">
             <a
                 href="/"
+                wire:navigate
                 class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
             >
                 Kembali ke Menu

@@ -269,7 +269,7 @@ class TransactionController extends Controller
                 }
 
                 if ($food->stock < $item['quantity']) {
-                    return redirect()->route('payment.failure')->with('debug', "Stok untuk {$food->name} tidak cukup. Stock available: {$food->stock}");
+                    return redirect()->route('payment.failure')->with('debug', "Stok {$food->name} tersisa: {$food->stock}");
                 }
 
                 $food->stock -= $item['quantity'];

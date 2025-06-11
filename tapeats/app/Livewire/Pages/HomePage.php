@@ -68,7 +68,6 @@ class HomePage extends Component
     #[Layout('components.layouts.page')]
     public function render(Foods $foods)
     {
-        sleep(1);
         $searchResult = $foods->search(trim($this->term))->get();
 
         return view('home', [
