@@ -50,7 +50,7 @@
             @endforeach
         @else
             <div class="col-span-2 my-2 w-full">
-                <p class="text-center text-black-70">No food available</p>
+                <p class="text-center text-black-70">No item available</p>
             </div>
         @endif
     </div>

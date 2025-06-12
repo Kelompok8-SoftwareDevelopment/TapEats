@@ -2,7 +2,6 @@
     <div class="min-h-screen flex flex-col justify-between">
         <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow rounded font-mono text-sm text-black-80">
             <div class="text-center">
-                <img src="{{ asset('assets/icons/store-icon.svg') }}" alt="Logo Toko" class="mx-auto w-16 h-16">
                 <h1 class="text-xl font-bold mt-2">OLLIES</h1>
                 <p class="text-xs">Jl. Dummy Address No.123, Kota Contoh</p>
                 <p class="text-xs">Telp: 081234567890</p>
@@ -46,7 +45,7 @@
             <p>Back: Rp 0</p>
 
             <div class="text-center mt-4">
-                <p>Thank You for Order</p>
+                <p>Thank You for Your Order</p>
                 <p class="text-xs mt-1">Feedback: https://ollies.test/feedback</p>
             </div>
         </div>
@@ -55,7 +54,7 @@
             <a
                 href="/"
                 wire:navigate
-                class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10"
+                class="flex w-full items-center justify-center gap-2 rounded-full bg-[#b7e4c7] px-6 py-3 font-semibold text-[#2D5900]"
             >
                 Back to Menu
             </a>
@@ -63,11 +62,12 @@
             <form action="{{ route('transactions.download', $transaction->id) }}" method="GET">
                 <button
                     type="submit"
-                    class="flex w-full items-center justify-center gap-2 rounded-full bg-blue-500 px-6 py-3 font-semibold text-white hover:bg-blue-600 transition"
+                    class="flex w-full items-center justify-center gap-2 rounded-full bg-[#2D5900] px-6 py-3 font-semibold text-white hover:opacity-90 transition"
                 >
                     Download Receipt
                 </button>
             </form>
         </div>
+
     </div>
 </x-layouts.app>

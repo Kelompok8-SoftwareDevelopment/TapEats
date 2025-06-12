@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset()
             ->profile()
             ->brandName('OLLIES')
-            ->brandLogo(asset('logo_ollies1.webp'))
+            ->brandLogo(asset('logo_ollies2_favicon1.png'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('logo_ollies2_favicon1.png'))
             ->colors([
