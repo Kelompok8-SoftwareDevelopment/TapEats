@@ -6,12 +6,18 @@ use App\Models\TransactionItems;
 use Illuminate\Support\Carbon;
 use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Support\Facades\Auth;
 
 class SalesChart extends ChartWidget
 {
     use InteractsWithPageFilters;
 
     protected static ?string $heading = 'Sales Chart';
+
+    public static function canView(): bool
+    {
+        return Auth::user()->isOwner();
+    }
 
     protected function getData(): array
     {
