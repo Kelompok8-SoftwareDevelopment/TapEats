@@ -8,11 +8,11 @@ use Livewire\Component;
 
 class CustomerModal extends Component
 {
-    #[Validate('required', message: 'Nama tidak boleh kosong')]
+    #[Validate('required', message: 'Name cannot be empty')]
     #[Session('name')]
     public $name = '';
 
-    #[Validate('required|min:10', message: 'Nomor telepon tidak boleh kosong')]
+    #[Validate('required|min:10', message: 'Phone number cannot be empty')]
     #[Session('phone')]
     public $phone = '';
 

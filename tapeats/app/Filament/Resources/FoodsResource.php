@@ -75,16 +75,10 @@ class FoodsResource extends Resource
                     ->hidden(fn($get) => !$get('is_promo')),
 
                 Forms\Components\Select::make('categories_id')
-                    ->options([
-                        10 => '10%',
-                        25 => '25%',
-                        35 => '35%',
-                        50 => '50%',
-                    ])
+                    ->label('Category')
+                    ->relationship('category', 'name')
                     ->required()
-                    ->columnSpanFull()
-                    ->relationship('categories', 'name'),
-
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('stock')
                     ->label('Stock')
                     ->numeric()
@@ -105,8 +99,8 @@ class FoodsResource extends Resource
                     ->label('Refresh')
                     ->icon('heroicon-o-arrow-path')
                     ->action(function ($livewire) {
-                    $livewire->resetTable();
-                })
+                        $livewire->resetTable();
+                    })
             ])
             ->columns([
                 Tables\Columns\TextColumn::make('name')

@@ -1,36 +1,30 @@
 <div
     x-data="{ open: {{ empty($name) ? "true" : "false" }} }"
-    class="flex min-h-screen flex-col bg-white font-poppins"
->
+    class="flex min-h-screen flex-col bg-white font-poppins">
     <livewire:components.page-title-nav
         :title="'Checkout'"
         wire:key="{{ str()->random(50) }}"
         :hasBack="true"
-        :hasFilter="false"
-    ></livewire:components.page-title-nav>
+        :hasFilter="false"></livewire:components.page-title-nav>
 
     <div class="container mb-8 space-y-10">
         <div class="space-y-2 text-black-100">
             <div
-                class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3"
-            >
+                class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3">
                 <span>Your Table Number</span>
                 <span class="text-lg font-semibold">{{ $tableNumber }}</span>
             </div>
             <div
-                class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3"
-            >
+                class="flex items-center justify-between rounded-full border border-black-30 px-5 py-3">
                 <span>Name</span>
                 <span class="flex items-center gap-2 text-lg font-semibold">
                     {{ $name ?? "" }}
                     <button
                         x-on:click="open = true"
-                        class="aspect-square rounded-full bg-black-30 p-2 transition-all hover:bg-black-40"
-                    >
+                        class="aspect-square rounded-full bg-black-30 p-2 transition-all hover:bg-black-40">
                         <img
                             src="{{ asset("assets/icons/pencil-icon.svg") }}"
-                            alt="Edit name"
-                        />
+                            alt="Edit name" />
                     </button>
                 </span>
             </div>
@@ -38,14 +32,13 @@
 
         <div>
             <h2 class="mb-4 text-lg font-medium text-black-100">
-                Makanan yang dipesan
+                Foods you've ordered
             </h2>
 
             <livewire:components.checkout-item-list
                 :withCheckbox="false"
                 :items="$cartItems"
-                wire:key="{{ str()->random(50) }}"
-            />
+                wire:key="{{ str()->random(50) }}" />
         </div>
 
         <div class="space-y-3 rounded-xl border-2 p-5">
@@ -71,49 +64,43 @@
         </div>
 
         @if (! $hasUnpaidTransaction)
-            <form
-                action="{{ route("payment", ["token" => $paymentToken]) }}"
-                method="POST"
-                class="space-y-3"
-            >
-                @csrf
-                <button
-                    type="submit"
-                    @if (empty($name) || empty($phone)) disabled @endif
-                    name="action"
-                    value="pay"
-                    class="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
-                    style="background-color: #2D5900;"
-                >
-                    <span>Payment</span>
-                    <img
-                        src="{{ asset('assets/icons/arrow-right-white-icon.svg') }}"
-                        alt="Cart"
-                    />
-                </button>
+        <form
+            action="{{ route("payment", ["token" => $paymentToken]) }}"
+            method="POST"
+            class="space-y-3">
+            @csrf
+            <button
+                type="submit"
+                @if (empty($name) || empty($phone)) disabled @endif
+                name="action"
+                value="pay"
+                class="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
+                style="background-color: #2D5900;">
+                <span>Payment</span>
+                <img
+                    src="{{ asset('assets/icons/arrow-right-white-icon.svg') }}"
+                    alt="Cart" />
+            </button>
 
-            </form>
+        </form>
         @else
-            <form
-                action="{{ route("payment", ["token" => $paymentToken]) }}"
-                method="POST"
-                class="flex gap-4 space-y-3"
-            >
-                @csrf
-                <button
-                    type="submit"
-                    @if (empty($name) || empty($phone)) disabled @endif
-                    name="action"
-                    value="continue"
-                    class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30"
-                >
-                    <span>Lanjut Bayar</span>
-                    <img
-                        src="{{ asset("assets/icons/arrow-right-white-icon.svg") }}"
-                        alt="Cart"
-                    />
-                </button>
-            </form>
+        <form
+            action="{{ route("payment", ["token" => $paymentToken]) }}"
+            method="POST"
+            class="flex gap-4 space-y-3">
+            @csrf
+            <button
+                type="submit"
+                @if (empty($name) || empty($phone)) disabled @endif
+                name="action"
+                value="continue"
+                class="flex w-full items-center justify-center gap-2 rounded-full bg-primary-50 px-6 py-3 font-semibold text-black-10 disabled:cursor-not-allowed disabled:bg-primary-30">
+                <span>Continue</span>
+                <img
+                    src="{{ asset("assets/icons/arrow-right-white-icon.svg") }}"
+                    alt="Cart" />
+            </button>
+        </form>
         @endif
     </div>
 

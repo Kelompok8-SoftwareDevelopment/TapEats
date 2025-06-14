@@ -118,6 +118,15 @@ class TransactionResource extends Resource
                         'warning' => fn($state): bool => $state === 'PENDING',
                         'danger' => fn($state): bool => in_array($state, ['FAILED', 'EXPIRED']),
                     ]),
+                Tables\Columns\SelectColumn::make('delivered')
+                    ->label('Delivery Status')
+                    ->options([
+                        'Pending' => 'Pending',
+                        'Delivered' => 'Delivered',
+                    ])
+                    ->sortable()
+                    ->selectablePlaceholder(false)
+                    ->rules(['required']),
                 Tables\Columns\TextColumn::make('subtotal')
                     ->label('Subtotal')
                     ->numeric()
